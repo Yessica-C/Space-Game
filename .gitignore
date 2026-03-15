@@ -3,6 +3,7 @@
 
 # Godot-specific ignores
 .import/
+*.temp
 export.cfg
 export_presets.cfg
 
@@ -14,7 +15,7 @@ export_presets.cfg
 data_*/
 mono_crash.*.json
 
+# Ignore my IDE and other workspace config folders
 .vs/
 .idea/
 .git/
-*.temp
