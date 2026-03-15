@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://f0kgy7a6aruv"]
+
+[ext_resource type="PackedScene" uid="uid://cye5mngj8wok2" path="res://ship_components/turrets/turret_barrel.blend" id="1_numhs"]
+[ext_resource type="PackedScene" uid="uid://b2d5sywrcpvn" path="res://ship_components/turrets/turret_base.blend" id="2_v0bgm"]
+
+[node name="DemoTurret" type="Node3D" unique_id=815796596]
+
+[node name="turret_barrel" parent="." unique_id=1530813985 instance=ExtResource("1_numhs")]
+transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, 0.043889523, 1.5488129, -0.00934875)
+
+[node name="turret_base" parent="." unique_id=1428344014 instance=ExtResource("2_v0bgm")]

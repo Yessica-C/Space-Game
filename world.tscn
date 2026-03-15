@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://bujoeu2x0his6"]
+
+[ext_resource type="PackedScene" uid="uid://djs1ohero5og4" path="res://Camera.tscn" id="1_fj7yv"]
+[ext_resource type="Script" uid="uid://bhav2cxpblk1s" path="res://SpaceObjectManager.cs" id="3_036b0"]
+[ext_resource type="Script" uid="uid://b4du1bs1jb1so" path="res://scripts/DebugMenu.cs" id="3_tlwt5"]
+[ext_resource type="PackedScene" uid="uid://cwcv0nvstvsyv" path="res://ships/dev_art_medium_ship/Demo Carrier.tscn" id="5_036b0"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rp7md"]
+
+[sub_resource type="Sky" id="Sky_osvlo"]
+sky_material = SubResource("ProceduralSkyMaterial_rp7md")
+
+[sub_resource type="Environment" id="Environment_ob5r1"]
+background_mode = 2
+sky = SubResource("Sky_osvlo")
+
+[node name="World" type="Node3D" unique_id=279368118]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1258544028]
+environment = SubResource("Environment_ob5r1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=560314107]
+transform = Transform3D(0.97441536, -0.18978621, 0.12039908, -0.09843424, 0.12122206, 0.98773277, -0.20205307, -0.9743133, 0.09943917, -100.47717, 72.582794, 28.422)
+
+[node name="CameraAnchorY" parent="." unique_id=1872248708 instance=ExtResource("1_fj7yv")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1.0000002, 0, -4.371139e-08, 75.02179, 34.447937, 19.489992)
+
+[node name="UserInterface" type="Node" parent="." unique_id=750925297]
+
+[node name="DebugMenu" type="Container" parent="UserInterface" unique_id=696133412]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_tlwt5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/DebugMenu" unique_id=1816061317]
+layout_mode = 2
+
+[node name="DisplayPathLines" type="CheckButton" parent="UserInterface/DebugMenu/VBoxContainer" unique_id=156317003]
+layout_mode = 2
+button_pressed = true
+text = "Display Path Lines"
+
+[node name="SpaceObjectManager" type="Node" parent="." unique_id=1573519984]
+script = ExtResource("3_036b0")
+
+[node name="DemoCarrier" parent="SpaceObjectManager" unique_id=2060835949 instance=ExtResource("5_036b0")]
+linear_damp = 10.0
