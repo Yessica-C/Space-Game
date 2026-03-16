@@ -27,8 +27,11 @@ public partial class ShipMotionTesting : RigidBody3D
 	public int TargetIndex = -1;
 	private bool HasDesto = true;
 
-
-	// Called when the node enters the scene tree for the first time.
+    //target path toggle
+    private CheckButton DisplayToggle;
+    private bool PathLineEnabled = true;
+    PackedScene PathLine;
+    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
 		Route[0] = new Vector3(0, 20, -50);
@@ -42,7 +45,42 @@ public partial class ShipMotionTesting : RigidBody3D
 		//config damping TODO read this from a class-specific json
         AngularDamp = 0.5f;
         LinearDamp = 0.5f;
+
+        //debug display path line button setup
+        DisplayToggle = GetNodeOrNull<CheckButton>("/root/World/UserInterface/DebugMenu/VBoxContainer/DisplayPathLines");
+        PathLine = GD.Load<PackedScene>("res://ship_components/path_line.tscn");
+        if (DisplayToggle == null)
+        {
+            GD.PrintErr("ERROR: Expected Resource: Root/DebugMenu/VBoxContainer/DisplayPathLines NOT FOUND - ShipMotionTesting.cs");
+            GD.PrintErr("Expected path: ");
+        }
+        DisplayToggle.Toggled += OnPathToggled;
+        if (PathLine == null)
+        {
+            GD.PrintErr("ERROR: Expected Resource: res://ship_components/path_line.tscn NOT FOUND - ShipMotionTesting.cs");
+        }
     }
+
+    private void OnPathToggled(bool toggledOn)
+    {
+        if (toggledOn)
+        {
+            // Spawn the node
+            Node PathLineNode = PathLine.Instantiate();
+            AddChild(PathLineNode);
+            PathLineNode.Name = "Path Line";
+        }
+        else
+        {
+            // Remove the node
+            Node PathLineNode = GetNodeOrNull("Path Line");
+            if (PathLineNode != null)
+            {
+                PathLineNode.QueueFree();
+            }
+        }
+    }
+
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
 	{

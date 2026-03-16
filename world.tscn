@@ -37,7 +37,6 @@ layout_mode = 2
 
 [node name="DisplayPathLines" type="CheckButton" parent="UserInterface/DebugMenu/VBoxContainer" unique_id=156317003]
 layout_mode = 2
-button_pressed = true
 text = "Display Path Lines"
 
 [node name="SpaceObjectManager" type="Node" parent="." unique_id=1573519984]

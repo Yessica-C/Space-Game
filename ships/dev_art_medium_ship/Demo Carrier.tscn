@@ -2,10 +2,7 @@
 
 [ext_resource type="Script" uid="uid://di5en8sdx44nv" path="res://scripts/ShipMotionTesting.cs" id="1_7g1vj"]
 [ext_resource type="PackedScene" uid="uid://50q6wsep77i2" path="res://ships/dev_art_medium_ship/Dev Art Medium Ship.blend" id="2_d6mf1"]
-[ext_resource type="Script" uid="uid://c1tqnvtgwbxsd" path="res://scripts/RouteViewerIMesh.cs" id="3_o6a4k"]
 [ext_resource type="PackedScene" uid="uid://f0kgy7a6aruv" path="res://ship_components/turrets/Demo Turret.tscn" id="4_6026r"]
-
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_pkg7o"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_tlf4v"]
 height = 39.427
@@ -23,11 +20,6 @@ script = ExtResource("1_7g1vj")
 [node name="ShipModel" parent="." unique_id=2128285380 instance=ExtResource("2_d6mf1")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 
-[node name="PathLine" type="MeshInstance3D" parent="." unique_id=840798025]
-top_level = true
-mesh = SubResource("ImmediateMesh_pkg7o")
-script = ExtResource("3_o6a4k")
-
 [node name="CollisionShape3D - Front" type="CollisionShape3D" parent="." unique_id=560037179]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.325, 0.493)
 shape = SubResource("CylinderShape3D_tlf4v")
@@ -37,4 +29,4 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -
 shape = SubResource("CylinderShape3D_6026r")
 
 [node name="DemoTurret" parent="." unique_id=815796596 instance=ExtResource("4_6026r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.582798, 3.603798, 23.138494)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.494224, 3.603798, 25.69899)
