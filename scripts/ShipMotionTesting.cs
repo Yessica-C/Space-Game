@@ -12,8 +12,6 @@ public partial class ShipMotionTesting : RigidBody3D
 	[Export] public float MoveSpeed = 15.0f; //5.0 for carrier
 	[Export] public float NavContactRange = 10.0f; // 10 for carrier
 	[Export] public float MinAlignment = 0.5f; // % alligned to target point to begin thrusting
-	private bool Maneuvering = false;
-	private float ManeuverDistance = 0.0f;
 
 	//auto rotation parameters
 	[Export] public float SelfRotationSpeed = 4f; //How quickly the body rotates toward the target direction
@@ -26,12 +24,11 @@ public partial class ShipMotionTesting : RigidBody3D
     public List<Vector3> Route = new List<Vector3>();
     public Vector3 TargetLocation;
 	public int TargetIndex = -1;
-	private bool HasDesto = true;
 
     //debug path view parameters
     private CheckButton DisplayToggle;
     private bool PathLineEnabled = true;
-    PackedScene PathLine;
+    PackedScene RouteLineScene;
 
     public enum NavMode
     { 
@@ -43,32 +40,21 @@ public partial class ShipMotionTesting : RigidBody3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        //Vector3 OrbitalCenter = new Vector3(75, 0, 0);
-        //Route = ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f);
-        Route.Add(new Vector3(0, 20, -50));
-        Route.Add(new Vector3(-50, 20, -75));
-        Route.Add(new Vector3(0, 20, -100));
-        Route.Add(new Vector3(50, 0, 10));
-        Route.Add(new Vector3(50, 50, 150));
-        
-        NAV_MODE = NavMode.ORBITING;
-		HasDesto = true;
-		UpdateTargetPos();
 
 		//config damping TODO read this from a ship-specific json on load - maybe a data child?
         AngularDamp = 0.5f;
         LinearDamp = 0.5f;
 
-        //debug display path line button setup
+        //debug display route line button setup
         DisplayToggle = GetNodeOrNull<CheckButton>("/root/World/UserInterface/DebugMenu/VBoxContainer/DisplayPathLines");
-        PathLine = GD.Load<PackedScene>("res://ship_components/path_line.tscn");
+        RouteLineScene = GD.Load<PackedScene>("res://ship_components/path_line.tscn");
         if (DisplayToggle == null)
         {
             GD.PrintErr("ERROR: Expected Resource: Root/DebugMenu/VBoxContainer/DisplayPathLines NOT FOUND - ShipMotionTesting.cs");
             GD.PrintErr("Expected path: ");
         }
         DisplayToggle.Toggled += OnPathDisplayLineToggled;
-        if (PathLine == null)
+        if (RouteLineScene == null)
         {
             GD.PrintErr("ERROR: Expected Resource: res://ship_components/path_line.tscn NOT FOUND - ShipMotionTesting.cs");
         }
@@ -76,21 +62,13 @@ public partial class ShipMotionTesting : RigidBody3D
 	
     public override void _PhysicsProcess(double delta)
 	{
-		if (HasDesto)
+		if (NAV_MODE != NavMode.STATIONARY)
         {
 			ShipMotionLib.AlignTowardsTarget(this, TargetLocation, TorqueMultiplier);
-
-            if (!AlignedToCurrentTarget() && !WithinContactRangeOfTarget())
+            ShipMotionLib.AlignmentAdjustedAccToTarget(this, TargetLocation, MoveSpeed, NavContactRange);
+            
+            if (WithinContactRangeOfTarget())//if within contact range, of target, move to next target
             {
-                Maneuvering = true;
-            }
-            if (Maneuvering)
-            {
-				ShipMotionLib.AlignmentAdjustedAccToTarget(this, TargetLocation, MoveSpeed, NavContactRange);
-            }
-            if (WithinContactRangeOfTarget())//if within contact range, 
-            {
-                Maneuvering = false;
                 UpdateTargetPos();
             }
         }
@@ -101,12 +79,37 @@ public partial class ShipMotionTesting : RigidBody3D
 
     }
 
+    //FOR INITIAL SETUP
+    public void OverrideCurrentPos(Vector3 NewPos)
+    {
+        GlobalPosition = NewPos;
+    }
+    //For giving commands
+    public void SetNewRoute(List<Vector3> NewRoute, NavMode NewMode)
+    {
+        Route = NewRoute;
+        NAV_MODE = NewMode;
+
+        if (NewMode == NavMode.ORBITING)
+        {
+            Vector3 ClosestRoutePoint;
+            int ClosestRouteIndex;
+            ShipMotionLib.GetClosestPointInRoute(this, Route, out ClosestRoutePoint, out ClosestRouteIndex);
+            TargetLocation = ClosestRoutePoint;
+            TargetIndex = ClosestRouteIndex;
+        }
+        else
+        { 
+            UpdateTargetPos();
+        }
+    }
+
     private void OnPathDisplayLineToggled(bool toggledOn)
     {
         if (toggledOn)
         {
             // Spawn the node
-            Node PathLineNode = PathLine.Instantiate();
+            Node PathLineNode = RouteLineScene.Instantiate();
             AddChild(PathLineNode);
             PathLineNode.Name = "Path Line";
         }
@@ -121,7 +124,7 @@ public partial class ShipMotionTesting : RigidBody3D
         }
     }
 
-    private void _PrintTransform()
+    private void PrintTransform()
     {
         GD.Print("---------------------------------");
         GD.Print("Global Position:\t", GlobalPosition);
@@ -146,7 +149,6 @@ public partial class ShipMotionTesting : RigidBody3D
         {
             GD.Print("Route Complete");
             NAV_MODE = NavMode.STATIONARY;
-            HasDesto = false;
         }
         else 
         {

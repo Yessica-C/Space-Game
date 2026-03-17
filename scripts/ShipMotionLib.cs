@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using static Godot.HttpRequest;
 
 public static class ShipMotionLib
 {
@@ -114,9 +116,18 @@ public static class ShipMotionLib
 
             points.Add(point);
         }
+        Random random = new Random();
+        double chance = random.NextDouble();
 
+        // 50% chance to reverse the orbit (CCW is normal, CW is reversed)
+        if (chance < 0.5)
+        {
+            points.Reverse();
+        }
         return points;
     }
+
+    //used for orbit point generation
     private static void CreateOrthogonalBasis(Vector3 normal, out Vector3 tangent1, out Vector3 tangent2)
     {
         // Find a vector that's not parallel to the normal
@@ -130,4 +141,27 @@ public static class ShipMotionLib
         tangent1 = normal.Cross(reference).Normalized();
         tangent2 = normal.Cross(tangent1).Normalized();
     }
+
+    public static void GetClosestPointInRoute(RigidBody3D Body, List<Vector3> Route, out Vector3 ClosestPoint, out int RouteIndex)
+    {
+        Vector3 Closest = Route[0];
+        int BestIndex = -1;
+        float ClosestDistance = float.MaxValue;
+
+        int i = -1;
+        foreach (Vector3 Point in Route)
+        {
+            i++;
+            float distance = Body.GlobalTransform.Origin.DistanceTo(Point);
+            if (distance < ClosestDistance)
+            {
+                ClosestDistance = distance;
+                Closest = Point;
+                BestIndex = i;
+            }
+        }
+        ClosestPoint = Closest;
+        RouteIndex = BestIndex;
+    }
+
 }
