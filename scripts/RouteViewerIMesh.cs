@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using static ShipMotionTesting;
 
@@ -20,18 +21,37 @@ public partial class RouteViewerIMesh : MeshInstance3D
         LineMesh = new ImmediateMesh();
         Vector3 CurrentPos = Parent.GlobalPosition;
         Vector3 TargetPos = Parent.TargetLocation;
-        Vector3[] Route = Parent.Route;
+        List<Vector3> Route = Parent.Route; // Changed from Vector3[] to List<Vector3>
 
         LineMesh.ClearSurfaces();
         LineMesh.SurfaceBegin(Mesh.PrimitiveType.Lines);
+        LineMesh.SurfaceSetColor(Colors.Cyan);
+
+        //current position to next waypoint line
         LineMesh.SurfaceAddVertex(CurrentPos);
         LineMesh.SurfaceAddVertex(TargetPos - GlobalPosition);
-        for (int i = Parent.TargetIndex; i < Route.Length - 1; i++)
+
+        //linear remaining path
+        if(Parent.NAV_MODE == NavMode.LINEAR)
         {
-            LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
-            LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
+            for (int i = Parent.TargetIndex; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
+            {
+                LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
+                LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
+            }
         }
-        LineMesh.SurfaceSetColor(Colors.Cyan);
+        if (Parent.NAV_MODE == NavMode.ORBITING)
+        {
+            for (int i = 0; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
+            {
+                LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
+                LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
+            }
+            //finish loop
+            LineMesh.SurfaceAddVertex(Route[Route.Count - 1] - GlobalPosition);
+            LineMesh.SurfaceAddVertex(Route[0] - GlobalPosition);
+        }
+
         LineMesh.SurfaceEnd();
         this.Mesh = LineMesh;
     }

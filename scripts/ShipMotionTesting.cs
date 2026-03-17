@@ -1,6 +1,8 @@
 using Godot;
 using Godot.NativeInterop;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Security.Cryptography.X509Certificates;
 
 
@@ -19,30 +21,41 @@ public partial class ShipMotionTesting : RigidBody3D
 	[Export] public float AlignmentThreshold = 75.0f; //Angle threshold in degrees to be "aligned"
 	
 
-	//temp target location
-
-	[Export]
-	public Vector3[] Route = new Vector3[5];
-	public Vector3 TargetLocation;
+	//navigation parameters
+    public NavMode NAV_MODE = NavMode.STATIONARY;
+    public List<Vector3> Route = new List<Vector3>();
+    public Vector3 TargetLocation;
 	public int TargetIndex = -1;
 	private bool HasDesto = true;
 
-    //target path toggle
+    //debug path view parameters
     private CheckButton DisplayToggle;
     private bool PathLineEnabled = true;
     PackedScene PathLine;
+
+    public enum NavMode
+    { 
+        STATIONARY,
+        LINEAR,
+        ORBITING
+    }
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-		Route[0] = new Vector3(0, 20, -50);
-        Route[1] = new Vector3(-50, 20, -75);
-        Route[2] = new Vector3(0, 20, -100);
-        Route[3] = new Vector3(50, 0, 10);
-        Route[4] = new Vector3(50, 50, 150);
-
+        //Vector3 OrbitalCenter = new Vector3(75, 0, 0);
+        //Route = ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f);
+        Route.Add(new Vector3(0, 20, -50));
+        Route.Add(new Vector3(-50, 20, -75));
+        Route.Add(new Vector3(0, 20, -100));
+        Route.Add(new Vector3(50, 0, 10));
+        Route.Add(new Vector3(50, 50, 150));
+        
+        NAV_MODE = NavMode.ORBITING;
 		HasDesto = true;
 		UpdateTargetPos();
-		//config damping TODO read this from a class-specific json
+
+		//config damping TODO read this from a ship-specific json on load - maybe a data child?
         AngularDamp = 0.5f;
         LinearDamp = 0.5f;
 
@@ -54,48 +67,14 @@ public partial class ShipMotionTesting : RigidBody3D
             GD.PrintErr("ERROR: Expected Resource: Root/DebugMenu/VBoxContainer/DisplayPathLines NOT FOUND - ShipMotionTesting.cs");
             GD.PrintErr("Expected path: ");
         }
-        DisplayToggle.Toggled += OnPathToggled;
+        DisplayToggle.Toggled += OnPathDisplayLineToggled;
         if (PathLine == null)
         {
             GD.PrintErr("ERROR: Expected Resource: res://ship_components/path_line.tscn NOT FOUND - ShipMotionTesting.cs");
         }
     }
-
-    private void OnPathToggled(bool toggledOn)
-    {
-        if (toggledOn)
-        {
-            // Spawn the node
-            Node PathLineNode = PathLine.Instantiate();
-            AddChild(PathLineNode);
-            PathLineNode.Name = "Path Line";
-        }
-        else
-        {
-            // Remove the node
-            Node PathLineNode = GetNodeOrNull("Path Line");
-            if (PathLineNode != null)
-            {
-                PathLineNode.QueueFree();
-            }
-        }
-    }
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-	{
-
-    }
-
-    private void _PrintTransform()
-    {
-        GD.Print("---------------------------------");
-        GD.Print("Global Position:\t", GlobalPosition);
-        GD.Print("Global Rotation:\t", GlobalRotation);
-        GD.Print("Local Quaternion:\t", Quaternion);
-    }
-
-	public override void _PhysicsProcess(double delta)
+	
+    public override void _PhysicsProcess(double delta)
 	{
 		if (HasDesto)
         {
@@ -117,6 +96,39 @@ public partial class ShipMotionTesting : RigidBody3D
         }
     }
 
+    public override void _Process(double delta)
+	{
+
+    }
+
+    private void OnPathDisplayLineToggled(bool toggledOn)
+    {
+        if (toggledOn)
+        {
+            // Spawn the node
+            Node PathLineNode = PathLine.Instantiate();
+            AddChild(PathLineNode);
+            PathLineNode.Name = "Path Line";
+        }
+        else
+        {
+            // Remove the node
+            Node PathLineNode = GetNodeOrNull("Path Line");
+            if (PathLineNode != null)
+            {
+                PathLineNode.QueueFree();
+            }
+        }
+    }
+
+    private void _PrintTransform()
+    {
+        GD.Print("---------------------------------");
+        GD.Print("Global Position:\t", GlobalPosition);
+        GD.Print("Global Rotation:\t", GlobalRotation);
+        GD.Print("Local Quaternion:\t", Quaternion);
+    }
+
 	private bool AlignedToCurrentTarget()
 	{
 		return ShipMotionLib.AlignmentDiffDegrees(this, TargetLocation) > AlignmentThreshold;
@@ -126,20 +138,37 @@ public partial class ShipMotionTesting : RigidBody3D
 	{
 		return GlobalPosition.DistanceTo(TargetLocation) < NavContactRange;
     }
-    private void UpdateTargetPos()
-	{
-		//rotate between a few target positions to practice rotation
-		if (TargetIndex == Route.Length)
-		{
-			GD.Print("Route Complete");
-			HasDesto = false;
-		}
-		else
-		{
-			TargetIndex++;
-			TargetLocation = Route[TargetIndex];
-			GD.Print("new Target: ", TargetLocation);
-		}
-    }
 
+    private void UpdateTargetPos()
+    {
+        //rotate between a few target positions to practice rotation
+        if (Route.Count == 0)
+        {
+            GD.Print("Route Complete");
+            NAV_MODE = NavMode.STATIONARY;
+            HasDesto = false;
+        }
+        else 
+        {
+            if (NAV_MODE == NavMode.LINEAR)
+            {
+                TargetLocation = Route[0];
+                Route.RemoveAt(0);
+                GD.Print("new Target: ", TargetLocation);
+            }
+            if (NAV_MODE == NavMode.ORBITING)
+            {
+                TargetIndex++;
+
+                // Check if we've reached the last item in the route
+                if (TargetIndex >= Route.Count)
+                {
+                    TargetIndex = 0; // Loop back to the first item
+                }
+
+                TargetLocation = Route[TargetIndex];
+                GD.Print("new Target: ", TargetLocation);
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public static class ShipMotionLib
 {
@@ -88,5 +89,45 @@ public static class ShipMotionLib
         // Apply the torque
         Body.ApplyTorque(AxisAngleTorque);
         return 0;
+    }
+
+    public static List<Vector3> GenerateOrbitalPoints(Vector3 center, float radius)
+    {
+        // Ensure normal is normalized
+        Vector3 normal = new Vector3(0, 1, 0);
+        normal = normal.Normalized();
+
+        // Create orthogonal vectors for the circle plane
+        Vector3 tangent1, tangent2;
+        CreateOrthogonalBasis(normal, out tangent1, out tangent2);
+
+        List<Vector3> points = new List<Vector3>();
+
+        // Generate 10 points around the circle
+        for (int i = 0; i < 10; i++)
+        {
+            float angle = (float)i / 10.0f * 2.0f * Mathf.Pi;
+
+            // Calculate point using parametric circle equation
+            Vector3 point = center +
+                           radius * (tangent1 * Mathf.Cos(angle) + tangent2 * Mathf.Sin(angle));
+
+            points.Add(point);
+        }
+
+        return points;
+    }
+    private static void CreateOrthogonalBasis(Vector3 normal, out Vector3 tangent1, out Vector3 tangent2)
+    {
+        // Find a vector that's not parallel to the normal
+        Vector3 reference = Vector3.Right;
+        if (Mathf.Abs(normal.Dot(Vector3.Right)) > 0.99f)
+        {
+            reference = Vector3.Forward;
+        }
+
+        // Create two orthogonal vectors using cross products
+        tangent1 = normal.Cross(reference).Normalized();
+        tangent2 = normal.Cross(tangent1).Normalized();
     }
 }
