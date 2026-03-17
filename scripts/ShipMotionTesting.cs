@@ -147,7 +147,7 @@ public partial class ShipMotionTesting : RigidBody3D
         //rotate between a few target positions to practice rotation
         if (Route.Count == 0)
         {
-            GD.Print("Route Complete");
+            GD.Print("[", Name, "] - Route Complete");
             NAV_MODE = NavMode.STATIONARY;
         }
         else 
@@ -156,7 +156,6 @@ public partial class ShipMotionTesting : RigidBody3D
             {
                 TargetLocation = Route[0];
                 Route.RemoveAt(0);
-                GD.Print("new Target: ", TargetLocation);
             }
             if (NAV_MODE == NavMode.ORBITING)
             {
@@ -169,8 +168,8 @@ public partial class ShipMotionTesting : RigidBody3D
                 }
 
                 TargetLocation = Route[TargetIndex];
-                GD.Print("new Target: ", TargetLocation);
             }
+            GD.Print("[", Name, "] - new Target: ", TargetLocation);
         }
     }
 }

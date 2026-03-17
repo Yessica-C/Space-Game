@@ -5,7 +5,4 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>SpaceGame</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="scripts\" />
-  </ItemGroup>
 </Project>

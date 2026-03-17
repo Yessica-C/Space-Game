@@ -1,7 +1,7 @@
 extends Node3D
 
 @export var rotational_sensitivity: float = 0.01
-@export var panning_sensitivity = 0.05
+@export var panning_sensitivity = 0.1
 @export var rotation_speed: float = 1.0
 @export var max_vertical_angle: float = 1.5 #in radians
 
@@ -30,14 +30,18 @@ func _input(event):
 	#panning
 	if (Input.is_action_pressed("cam_pan") or (Input.is_action_pressed("cam_rotate") and Input.is_action_pressed("cam_pan_modif"))) and event is InputEventMouseMotion:
 		
-		var cam_basis = self.global_transform.basis
-		var right = cam_basis.x
-		var up = cam_basis.y
-
-		var movement = -right * event.relative.x * panning_sensitivity # I set mine at mouse_sensitivity = 0.0075
-		movement -= up * -event.relative.y *  panning_sensitivity
+		# Create movement vector in local space
+		var movement = Vector3(
+			-event.relative.x * panning_sensitivity,  # Left/right (local x)
+			0,  # No vertical movement
+			-event.relative.y * panning_sensitivity  # Forward/backward (local z)
+		)
 		
-		global_translate(movement)
+		# Transform local movement to global space
+		var global_movement = self.global_transform.basis * movement
+		
+		# Apply movement to global position
+		global_position += global_movement
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
