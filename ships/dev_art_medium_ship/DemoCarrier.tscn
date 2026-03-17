@@ -18,15 +18,15 @@ inertia = Vector3(10, 10, 10)
 script = ExtResource("1_7g1vj")
 
 [node name="ShipModel" parent="." unique_id=2128285380 instance=ExtResource("2_d6mf1")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -4.804123)
 
 [node name="CollisionShape3D - Front" type="CollisionShape3D" parent="." unique_id=560037179]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.325, 0.493)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.325, -4.311123)
 shape = SubResource("CylinderShape3D_tlf4v")
 
 [node name="CollisionShape3D - Rear" type="CollisionShape3D" parent="." unique_id=1798011542]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.16800001, 23.997942)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.16800001, 19.193819)
 shape = SubResource("CylinderShape3D_6026r")
 
 [node name="DemoTurret" parent="." unique_id=815796596 instance=ExtResource("4_6026r")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.494224, 3.603798, 25.69899)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.3881235, 3.603798, 21.000135)

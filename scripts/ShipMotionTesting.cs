@@ -58,6 +58,11 @@ public partial class ShipMotionTesting : RigidBody3D
         {
             GD.PrintErr("ERROR: Expected Resource: res://ship_components/path_line.tscn NOT FOUND - ShipMotionTesting.cs");
         }
+
+        PackedScene OrangeSelectionBox = GD.Load<PackedScene>("res://space_objects//orange_selection_box/orange_selection_box.tscn");
+        OrangeSelectionBox OSB = OrangeSelectionBox.Instantiate<OrangeSelectionBox>();
+        AddChild(OSB);
+        OSB.SetSize(15, 2.5f, 45);
     }
 	
     public override void _PhysicsProcess(double delta)

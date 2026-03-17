@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://dgylr6tvh4wsl"]
+
+[ext_resource type="PackedScene" uid="uid://dh1nkblt71l7d" path="res://space_objects/orange_selection_box/selection_box_corner.blend" id="1_7hipt"]
+[ext_resource type="Script" uid="uid://qjxyb8ium4te" path="res://space_objects/orange_selection_box/OrangeSelectionBox.cs" id="1_ly43m"]
+
+[node name="OrangeSelectionBox" type="Node3D" unique_id=193680029]
+script = ExtResource("1_ly43m")
+
+[node name="---" parent="." unique_id=2055252571 instance=ExtResource("1_7hipt")]
+
+[node name="--+" parent="." unique_id=369278896 instance=ExtResource("1_7hipt")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="-+-" parent="." unique_id=356920539 instance=ExtResource("1_7hipt")]
+transform = Transform3D(1.1924881e-08, 8.742278e-08, 1, 0, -1, 8.742278e-08, 1, -1.0425061e-15, -1.1924881e-08, 0, 0, 0)
+
+[node name="-++" parent="." unique_id=1752514671 instance=ExtResource("1_7hipt")]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
+
+[node name="+--" parent="." unique_id=267298187 instance=ExtResource("1_7hipt")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 0, 0, 0)
+
+[node name="+-+" parent="." unique_id=1556340119 instance=ExtResource("1_7hipt")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="++-" parent="." unique_id=41673029 instance=ExtResource("1_7hipt")]
+transform = Transform3D(-1, 7.642742e-15, 8.742278e-08, 0, -1, 8.742278e-08, 8.742278e-08, 8.742278e-08, 1, 0, 0, 0)
+
+[node name="+++" parent="." unique_id=1026960409 instance=ExtResource("1_7hipt")]
+transform = Transform3D(-4.371139e-08, -8.742278e-08, -1, 0, -1, 8.742278e-08, -1, 3.821371e-15, 4.371139e-08, 0, 0, 0)

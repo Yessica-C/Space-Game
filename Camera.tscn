@@ -19,3 +19,4 @@ script = ExtResource("3_lxp0o")
 
 [node name="CameraGimbleVisual" parent="." unique_id=1833822154 instance=ExtResource("4_aavg0")]
 transform = Transform3D(1, 0, 0, -1.2560739e-15, 0.70710677, 0.7071069, 1.2560739e-15, -0.70710677, 0.7071069, 0, 0, 0)
+visible = false
