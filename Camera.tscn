@@ -3,20 +3,19 @@
 [ext_resource type="Script" uid="uid://calwe0m6cxag1" path="res://scripts/camera_anchor_y.gd" id="1_aavg0"]
 [ext_resource type="Script" uid="uid://d1a667cny3c56" path="res://scripts/camera_anchor_x.gd" id="2_xjyju"]
 [ext_resource type="Script" uid="uid://dgxpbw6vj30lu" path="res://scripts/camera_3d.gd" id="3_lxp0o"]
-[ext_resource type="PackedScene" uid="uid://50q6wsep77i2" path="res://ships/dev_art_medium_ship/Dev Art Medium Ship.blend" id="4_a0f6b"]
+[ext_resource type="PackedScene" uid="uid://y7slfpp46b78" path="res://space_objects/blue_ender_star/resources/blue_ender_star.blend" id="4_aavg0"]
 
 [node name="CameraAnchorY" type="Node3D" unique_id=1872248708]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1.0000002, 0, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(1.0000002, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_aavg0")
 
 [node name="CameraAnchorX" type="Node3D" parent="." unique_id=757333824]
-transform = Transform3D(1, 0, 0, 0, 0.8771463, 0.48022363, 0, -0.48022357, 0.8771464, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.70710695, 0, -0.7071068, 0.70710695, 0, 0, 0)
 script = ExtResource("2_xjyju")
 
 [node name="Camera3D" type="Camera3D" parent="CameraAnchorX" unique_id=910691697]
-transform = Transform3D(0.99999994, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000002, 0, 0, 50.000008)
+transform = Transform3D(0.99999994, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000002, 0, 0, 100)
 script = ExtResource("3_lxp0o")
 
-[node name="CameraGimbleVisual" parent="CameraAnchorX" unique_id=2128285380 instance=ExtResource("4_a0f6b")]
-transform = Transform3D(0.44000006, 0, 0, 0, 0.44000006, 0, 0, 0, 0.4400001, 0, 0, 0)
-visible = false
+[node name="CameraGimbleVisual" parent="." unique_id=1833822154 instance=ExtResource("4_aavg0")]
+transform = Transform3D(1, 0, 0, -1.2560739e-15, 0.70710677, 0.7071069, 1.2560739e-15, -0.70710677, 0.7071069, 0, 0, 0)

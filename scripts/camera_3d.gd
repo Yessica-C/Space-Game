@@ -1,6 +1,6 @@
 extends Camera3D
 		
-@export var mouse_sensitivity = 0.0075
+@export var mouse_sensitivity = 5
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -16,9 +16,9 @@ func _input(event):
 	#zoom handling
 	var mouse_input = 0.0
 	if(Input.is_action_just_pressed("zoom_out")):
-		mouse_input += 1.5
+		mouse_input += mouse_sensitivity
 	if(Input.is_action_just_pressed("zoom_in")):
-		mouse_input -= 1.5
+		mouse_input -= mouse_sensitivity
 	var mouse_dir = global_transform.basis.z * mouse_input
 	global_position -= mouse_dir
 	

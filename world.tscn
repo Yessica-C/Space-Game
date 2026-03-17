@@ -22,8 +22,8 @@ environment = SubResource("Environment_ob5r1")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=560314107]
 transform = Transform3D(0.97441536, -0.18978621, 0.12039908, -0.09843424, 0.12122206, 0.98773277, -0.20205307, -0.9743133, 0.09943917, -100.47717, 72.582794, 28.422)
 
-[node name="CameraAnchorY" parent="." unique_id=1872248708 instance=ExtResource("1_fj7yv")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1.0000002, 0, -4.371139e-08, 75.02179, 34.447937, 19.489992)
+[node name="Camera" parent="." unique_id=1872248708 instance=ExtResource("1_fj7yv")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1.0000002, 0, -4.371139e-08, 0, 0, 0)
 
 [node name="UserInterface" type="Node" parent="." unique_id=750925297]
 

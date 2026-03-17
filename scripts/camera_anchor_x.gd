@@ -1,8 +1,8 @@
 extends Node3D
 
-@export var rotational_sensitivity: float = 0.01
 @export var panning_sensitivity = 0.05
-@export var rotation_speed: float = 1.0
+@export var mouse_rotation_speed: float = .01
+@export var keyboard_rotation_speed: float = 5
 @export var max_vertical_angle: float = 1.5 #in radians
 
 var is_rotating: bool = false
@@ -19,17 +19,27 @@ func _input(event):
 	
 	elif event is InputEventMouseMotion and is_rotating:
 		var delta = event.relative
-		rotate_x(-delta.y * rotational_sensitivity * rotation_speed)
+		rotate_x(-delta.y * mouse_rotation_speed)
 		
 	# Keep Z rotation (roll) at 0 to prevent rolling
-	var clamped_x = clamp(rotation.x, -max_vertical_angle, max_vertical_angle)
-	rotation.x = clamped_x
+	rotation.x = clamp(rotation.x, -max_vertical_angle, max_vertical_angle)
 	rotation.z = 0
 	rotation.y = 0
 	
 
 
 func _process(delta: float) -> void:
+	
+	#keyboard camera rotate
+	if Input.is_action_pressed("rotate_up"):
+		rotate_x(keyboard_rotation_speed * delta)
+	if Input.is_action_pressed("rotate_down"):
+		rotate_x(-keyboard_rotation_speed * delta)
+	rotation.x = clamp(rotation.x, -max_vertical_angle, max_vertical_angle)
+	rotation.z = 0
+	rotation.y = 0
+	
+	#rotation toggle
 	if Input.is_action_pressed("cam_rotate"):
 		if not is_rotating:
 			is_rotating = true

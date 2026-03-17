@@ -1,8 +1,9 @@
 extends Node3D
 
-@export var rotational_sensitivity: float = 0.01
-@export var panning_sensitivity = 0.1
-@export var rotation_speed: float = 1.0
+@export var mouse_panning_sensitivity = 0.1
+@export var keyboard_panning_sensitivity = 100
+@export var mouse_rotation_speed: float = 0.01
+@export var keyboard_rotation_speed: float = 5
 @export var max_vertical_angle: float = 1.5 #in radians
 
 var is_rotating: bool = false
@@ -23,7 +24,7 @@ func _input(event):
 	
 	elif event is InputEventMouseMotion and is_rotating:
 		var delta = event.relative
-		rotate_y(-delta.x * rotational_sensitivity * rotation_speed)
+		rotate_y(-delta.x * mouse_rotation_speed)
 	rotation.x = 0
 	rotation.z = 0
 	
@@ -32,9 +33,9 @@ func _input(event):
 		
 		# Create movement vector in local space
 		var movement = Vector3(
-			-event.relative.x * panning_sensitivity,  # Left/right (local x)
+			-event.relative.x * mouse_panning_sensitivity,  # Left/right (local x)
 			0,  # No vertical movement
-			-event.relative.y * panning_sensitivity  # Forward/backward (local z)
+			-event.relative.y * mouse_panning_sensitivity  # Forward/backward (local z)
 		)
 		
 		# Transform local movement to global space
@@ -45,6 +46,34 @@ func _input(event):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
+	var camera = get_node("CameraAnchorX/Camera3D")
+	var zoom_level = global_position.distance_to(camera.global_position)
+	var zoom_factor = zoom_level / 50
+	
+	# keyboard camera panning
+	var movement = Vector3(0, 0, 0)
+	if(Input.is_action_pressed("move_left")):
+		movement += Vector3(-keyboard_panning_sensitivity, 0, 0)
+	if(Input.is_action_pressed("move_right")):
+		movement += Vector3(keyboard_panning_sensitivity, 0, 0)
+	if(Input.is_action_pressed("move_forward")):
+		movement += Vector3(0, 0, -keyboard_panning_sensitivity)
+	if(Input.is_action_pressed("move_backward")):
+		movement += Vector3(0, 0, keyboard_panning_sensitivity)
+	
+	var global_movement = self.global_transform.basis * movement * delta * zoom_factor
+	global_position += global_movement
+	
+	#keyboard camera rotation
+	if Input.is_action_pressed("rotate_left"):
+		rotate_y(keyboard_rotation_speed * delta)
+	if Input.is_action_pressed("rotate_right"):
+		rotate_y(-keyboard_rotation_speed * delta)
+	rotation.x = 0
+	rotation.z = 0
+	
+	#rotation check
 	if Input.is_action_pressed("cam_rotate"):
 		if not is_rotating:
 			is_rotating = true
