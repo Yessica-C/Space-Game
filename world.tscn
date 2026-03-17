@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://bhav2cxpblk1s" path="res://SpaceObjectManager.cs" id="3_036b0"]
 [ext_resource type="Script" uid="uid://b4du1bs1jb1so" path="res://scripts/DebugMenu.cs" id="3_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://cwcv0nvstvsyv" path="res://ships/dev_art_medium_ship/Demo Carrier.tscn" id="5_036b0"]
+[ext_resource type="PackedScene" uid="uid://dxiay4kogm45n" path="res://space_objects/blue_ender_star/blue_ender_star.tscn" id="5_dwbse"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rp7md"]
 
@@ -44,3 +45,15 @@ script = ExtResource("3_036b0")
 
 [node name="DemoCarrier" parent="SpaceObjectManager" unique_id=2060835949 instance=ExtResource("5_036b0")]
 linear_damp = 10.0
+
+[node name="DemoAsteroid" parent="." unique_id=1264688801 instance=ExtResource("5_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -75, 0, 0)
+
+[node name="DemoAsteroid2" parent="." unique_id=1569497153 instance=ExtResource("5_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -75)
+
+[node name="DemoAsteroid3" parent="." unique_id=641213270 instance=ExtResource("5_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 75)
+
+[node name="DemoAsteroid4" parent="." unique_id=377042551 instance=ExtResource("5_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, 0, 0)

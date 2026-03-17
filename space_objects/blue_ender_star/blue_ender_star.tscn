@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dxiay4kogm45n"]
+
+[ext_resource type="PackedScene" uid="uid://y7slfpp46b78" path="res://space_objects/blue_ender_star/resources/blue_ender_star.blend" id="1_ts7pt"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_5a571"]
+
+[node name="DemoAsteroid" type="RigidBody3D" unique_id=1264688801]
+disable_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1815002386]
+transform = Transform3D(4.925, 0, 0, 0, 4.925, 0, 0, 0, 4.925, 0, 0, 0)
+shape = SubResource("SphereShape3D_5a571")
+
+[node name="blue_ender_star" parent="." unique_id=1833822154 instance=ExtResource("1_ts7pt")]
