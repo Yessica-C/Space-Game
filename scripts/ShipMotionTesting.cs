@@ -3,11 +3,15 @@ using Godot.NativeInterop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 
 public partial class ShipMotionTesting : RigidBody3D
 {
+    //user interaction parameters
+    public bool Selected = false;
+
 	//auto thrust parameters
 	[Export] public float MoveSpeed = 15.0f; //5.0 for carrier
 	[Export] public float NavContactRange = 10.0f; // 10 for carrier
@@ -17,7 +21,6 @@ public partial class ShipMotionTesting : RigidBody3D
 	[Export] public float SelfRotationSpeed = 4f; //How quickly the body rotates toward the target direction
 	[Export] public float TorqueMultiplier = 4f; //1.0 for carrier
 	[Export] public float AlignmentThreshold = 75.0f; //Angle threshold in degrees to be "aligned"
-	
 
 	//navigation parameters
     public NavMode NAV_MODE = NavMode.STATIONARY;
@@ -28,7 +31,9 @@ public partial class ShipMotionTesting : RigidBody3D
     //debug path view parameters
     private CheckButton DisplayToggle;
     private bool PathLineEnabled = true;
-    PackedScene RouteLineScene;
+    PackedScene RouteLineScene; 
+    PackedScene OrangeSelectionBox = GD.Load<PackedScene>("res://space_objects//orange_selection_box/orange_selection_box.tscn");
+
 
     public enum NavMode
     { 
@@ -58,13 +63,27 @@ public partial class ShipMotionTesting : RigidBody3D
         {
             GD.PrintErr("ERROR: Expected Resource: res://ship_components/path_line.tscn NOT FOUND - ShipMotionTesting.cs");
         }
+    }
 
-        PackedScene OrangeSelectionBox = GD.Load<PackedScene>("res://space_objects//orange_selection_box/orange_selection_box.tscn");
+    public override void _MouseEnter()
+    {
+        Selected = true;
         OrangeSelectionBox OSB = OrangeSelectionBox.Instantiate<OrangeSelectionBox>();
         AddChild(OSB);
+        OSB.GlobalTransform = this.GlobalTransform;
         OSB.SetSize(15, 2.5f, 45);
+        OSB.Name = "OSB";
+        Selected = true;
     }
-	
+    public override void _MouseExit()
+    {
+        IEnumerable<OrangeSelectionBox> allSelectionBoxes = GetChildren().OfType <OrangeSelectionBox>();
+        foreach (var child in allSelectionBoxes)
+        {
+            child.QueueFree();
+        }
+    }
+
     public override void _PhysicsProcess(double delta)
 	{
 		if (NAV_MODE != NavMode.STATIONARY)

@@ -47,13 +47,13 @@ public partial class OrangeSelectionBox : Node3D
         DistanceX = ((SizeX / 2) + 5);
         DistanceY = ((SizeY / 2) + 5);
         DistanceZ = ((SizeZ / 2) + 5);
-        nnn.GlobalPosition = new Vector3(-DistanceX, -DistanceY, -DistanceZ);
-        nnp.GlobalPosition = new Vector3(-DistanceX, -DistanceY, DistanceZ);
-        npn.GlobalPosition = new Vector3(-DistanceX, DistanceY, -DistanceZ);
-        npp.GlobalPosition = new Vector3(-DistanceX, DistanceY, DistanceZ);
-        pnn.GlobalPosition = new Vector3(DistanceX, -DistanceY, -DistanceZ);
-        pnp.GlobalPosition = new Vector3(DistanceX, -DistanceY, DistanceZ);
-        ppn.GlobalPosition = new Vector3(DistanceX, DistanceY, -DistanceZ);
-        ppp.GlobalPosition = new Vector3(DistanceX, DistanceY, DistanceZ);
+        nnn.Position += new Vector3(-DistanceX, -DistanceY, -DistanceZ);
+        nnp.Position += new Vector3(-DistanceX, -DistanceY, DistanceZ);
+        npn.Position += new Vector3(-DistanceX, DistanceY, -DistanceZ);
+        npp.Position += new Vector3(-DistanceX, DistanceY, DistanceZ);
+        pnn.Position += new Vector3(DistanceX, -DistanceY, -DistanceZ);
+        pnp.Position += new Vector3(DistanceX, -DistanceY, DistanceZ);
+        ppn.Position += new Vector3(DistanceX, DistanceY, -DistanceZ);
+        ppp.Position += new Vector3(DistanceX, DistanceY, DistanceZ);
     }
 }

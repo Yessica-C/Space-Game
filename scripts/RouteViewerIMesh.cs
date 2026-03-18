@@ -23,36 +23,41 @@ public partial class RouteViewerIMesh : MeshInstance3D
         Vector3 TargetPos = Parent.TargetLocation;
         List<Vector3> Route = Parent.Route; // Changed from Vector3[] to List<Vector3>
 
-        LineMesh.ClearSurfaces();
-        LineMesh.SurfaceBegin(Mesh.PrimitiveType.Lines);
-        LineMesh.SurfaceSetColor(Colors.Cyan);
-
         //current position to next waypoint line
-        LineMesh.SurfaceAddVertex(CurrentPos);
-        LineMesh.SurfaceAddVertex(TargetPos - GlobalPosition);
-
-        //linear remaining path
-        if(Parent.NAV_MODE == NavMode.LINEAR)
+        if (Parent.NAV_MODE != NavMode.STATIONARY)
         {
-            for (int i = Parent.TargetIndex; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
-            {
-                LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
-                LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
-            }
-        }
-        if (Parent.NAV_MODE == NavMode.ORBITING)
-        {
-            for (int i = 0; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
-            {
-                LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
-                LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
-            }
-            //finish loop
-            LineMesh.SurfaceAddVertex(Route[Route.Count - 1] - GlobalPosition);
-            LineMesh.SurfaceAddVertex(Route[0] - GlobalPosition);
-        }
+            LineMesh.ClearSurfaces();
+            LineMesh.SurfaceBegin(Mesh.PrimitiveType.Lines);
+            LineMesh.SurfaceSetColor(Colors.Cyan);
 
-        LineMesh.SurfaceEnd();
-        this.Mesh = LineMesh;
+            //current pos to next waypoint
+            LineMesh.SurfaceAddVertex(CurrentPos);
+            LineMesh.SurfaceAddVertex(TargetPos - GlobalPosition);
+
+
+            //linear remaining path
+            if (Parent.NAV_MODE == NavMode.LINEAR)
+            {
+                for (int i = Parent.TargetIndex; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
+                {
+                    LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
+                    LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
+                }
+            }
+            if (Parent.NAV_MODE == NavMode.ORBITING)
+            {
+                for (int i = 0; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
+                {
+                    LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
+                    LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
+                }
+                //finish loop
+                LineMesh.SurfaceAddVertex(Route[Route.Count - 1] - GlobalPosition);
+                LineMesh.SurfaceAddVertex(Route[0] - GlobalPosition);
+            }
+
+            LineMesh.SurfaceEnd();
+            this.Mesh = LineMesh;
+        }
     }
 }
