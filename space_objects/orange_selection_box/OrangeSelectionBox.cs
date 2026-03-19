@@ -44,9 +44,9 @@ public partial class OrangeSelectionBox : Node3D
         SizeY = Y;
         SizeZ = Z;
 
-        DistanceX = ((SizeX / 2) + 5);
-        DistanceY = ((SizeY / 2) + 5);
-        DistanceZ = ((SizeZ / 2) + 5);
+        DistanceX = ((SizeX / 2));
+        DistanceY = ((SizeY / 2));
+        DistanceZ = ((SizeZ / 2));
         nnn.Position += new Vector3(-DistanceX, -DistanceY, -DistanceZ);
         nnp.Position += new Vector3(-DistanceX, -DistanceY, DistanceZ);
         npn.Position += new Vector3(-DistanceX, DistanceY, -DistanceZ);

@@ -65,25 +65,6 @@ public partial class ShipMotionTesting : RigidBody3D
         }
     }
 
-    public override void _MouseEnter()
-    {
-        Selected = true;
-        OrangeSelectionBox OSB = OrangeSelectionBox.Instantiate<OrangeSelectionBox>();
-        AddChild(OSB);
-        OSB.GlobalTransform = this.GlobalTransform;
-        OSB.SetSize(15, 2.5f, 45);
-        OSB.Name = "OSB";
-        Selected = true;
-    }
-    public override void _MouseExit()
-    {
-        IEnumerable<OrangeSelectionBox> allSelectionBoxes = GetChildren().OfType <OrangeSelectionBox>();
-        foreach (var child in allSelectionBoxes)
-        {
-            child.QueueFree();
-        }
-    }
-
     public override void _PhysicsProcess(double delta)
 	{
 		if (NAV_MODE != NavMode.STATIONARY)
@@ -127,7 +108,31 @@ public partial class ShipMotionTesting : RigidBody3D
             UpdateTargetPos();
         }
     }
+    
+    public void MouseHoverOn()
+    {
+        OrangeSelectionBox OSB = OrangeSelectionBox.Instantiate<OrangeSelectionBox>();
+        AddChild(OSB);
+        OSB.GlobalTransform = this.GlobalTransform;
+        OSB.SetSize(25, 20, 55);
+        OSB.Name = "OSB";
+        Selected = true;
+    }
 
+    public void MouseHoverOff()
+    {
+        IEnumerable<OrangeSelectionBox> allSelectionBoxes = GetChildren().OfType<OrangeSelectionBox>();
+        foreach (var child in allSelectionBoxes)
+        {
+            child.QueueFree();
+        }
+        Selected = false;
+    }
+
+    public void InputSelected()
+    {
+        GD.Print(Name, " Was Clicked!");
+    }
     private void OnPathDisplayLineToggled(bool toggledOn)
     {
         if (toggledOn)

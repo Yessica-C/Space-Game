@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://di5en8sdx44nv" path="res://scripts/ShipMotionTesting.cs" id="1_7g1vj"]
 [ext_resource type="PackedScene" uid="uid://50q6wsep77i2" path="res://ships/dev_art_medium_ship/Dev Art Medium Ship.blend" id="2_d6mf1"]
 [ext_resource type="PackedScene" uid="uid://f0kgy7a6aruv" path="res://ship_components/turrets/Demo Turret.tscn" id="4_6026r"]
+[ext_resource type="Script" uid="uid://bi0hb0nrks2gd" path="res://ships/dev_art_medium_ship/SelectionBox.cs" id="4_i3efh"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_tlf4v"]
 height = 39.427
@@ -11,6 +12,9 @@ radius = 5.5
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_6026r"]
 height = 22.468
 radius = 6.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ibwc6"]
+size = Vector3(25, 20, 55)
 
 [node name="DemoCarrier" type="RigidBody3D" unique_id=2060835949]
 gravity_scale = 0.0
@@ -30,3 +34,12 @@ shape = SubResource("CylinderShape3D_6026r")
 
 [node name="DemoTurret" parent="." unique_id=815796596 instance=ExtResource("4_6026r")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.3881235, 3.603798, 21.000135)
+
+[node name="SelectionBox" type="Area3D" parent="." unique_id=878200568]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("4_i3efh")
+
+[node name="SelectionShape" type="CollisionShape3D" parent="SelectionBox" unique_id=430050054]
+shape = SubResource("BoxShape3D_ibwc6")
+debug_color = Color(0.7317242, 0.46844274, 0.1736567, 0.41960785)
