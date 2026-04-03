@@ -2,17 +2,17 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using static ShipMotionTesting;
+using static SelfPropelledSpaceObject;
 
 public partial class RouteViewerIMesh : MeshInstance3D
 {
-	private ShipMotionTesting Parent;
+	private SelfPropelledSpaceObject Parent;
 	private ImmediateMesh LineMesh;
     private CheckButton DisplayToggle;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        Parent = GetParent<ShipMotionTesting>();
+        Parent = GetParent<SelfPropelledSpaceObject>();
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

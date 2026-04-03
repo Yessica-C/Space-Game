@@ -5,4 +5,7 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>SpaceGame</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="ships\dev_art_medium_ship\" />
+  </ItemGroup>
 </Project>

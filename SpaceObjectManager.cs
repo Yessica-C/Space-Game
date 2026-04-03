@@ -7,25 +7,46 @@ public partial class SpaceObjectManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		PackedScene DevArtCarrier = GD.Load<PackedScene>("res://ships/dev_art_medium_ship/DemoCarrier.tscn");
+		PackedScene DevArtCarrier = GD.Load<PackedScene>("res://ships/demo_carrier/DemoCarrier.tscn");
+		PackedScene DevArtFighter = GD.Load<PackedScene>("res://ships/dev_art_fighter/DemoFighter.tscn");
 
 		Vector3 StartingPos = new Vector3(0, 50, 0);
         Vector3 OrbitalCenter = new Vector3(75, 0, 0);
 
-        ShipMotionTesting Carrier1 = DevArtCarrier.Instantiate<ShipMotionTesting>();
+        SelfPropelledSpaceObject Carrier1 = DevArtCarrier.Instantiate<SelfPropelledSpaceObject>();
 		AddChild(Carrier1);
 		Carrier1.Name = "Carrier 1";
         Carrier1.OverrideCurrentPos(StartingPos);
-		Carrier1.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), ShipMotionTesting.NavMode.ORBITING);
+		Carrier1.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
 
         StartingPos = new Vector3(0, -50, 0);
         OrbitalCenter = new Vector3(-75, 0, 0);
 
-        ShipMotionTesting Carrier2 = DevArtCarrier.Instantiate<ShipMotionTesting>();
+        SelfPropelledSpaceObject Carrier2 = DevArtCarrier.Instantiate<SelfPropelledSpaceObject>();
         AddChild(Carrier2);
         Carrier2.Name = "Carrier 2";
         Carrier2.OverrideCurrentPos(StartingPos);
-        Carrier2.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), ShipMotionTesting.NavMode.ORBITING);
+        Carrier2.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
+
+
+
+        StartingPos = new Vector3(0, -100, 0);
+        OrbitalCenter = new Vector3(0, 0, -75);
+
+        SelfPropelledSpaceObject Fighter1 = DevArtFighter.Instantiate<SelfPropelledSpaceObject>();
+        AddChild(Fighter1);
+        Fighter1.Name = "Fighter1";
+        Fighter1.OverrideCurrentPos(StartingPos);
+        Fighter1.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
+
+        StartingPos = new Vector3(0, 100, 0);
+        OrbitalCenter = new Vector3(0, 0, 75);
+
+        SelfPropelledSpaceObject Fighter2 = DevArtFighter.Instantiate<SelfPropelledSpaceObject>();
+        AddChild(Fighter2);
+        Fighter2.Name = "Fighter2";
+        Fighter2.OverrideCurrentPos(StartingPos);
+        Fighter2.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

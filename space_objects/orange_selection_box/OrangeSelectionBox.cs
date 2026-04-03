@@ -31,6 +31,15 @@ public partial class OrangeSelectionBox : Node3D
         pnp = GetNode<Node3D>("+-+");
         ppn = GetNode<Node3D>("++-");
         ppp = GetNode<Node3D>("+++");
+
+        if (nnn == null) GD.Print("OSB - nnn is null");
+        if (nnp == null) GD.Print("OSB - nnp is null");
+        if (npn == null) GD.Print("OSB - npn is null");
+        if (npp == null) GD.Print("OSB - npp is null");
+        if (pnn == null) GD.Print("OSB - pnn is null");
+        if (pnp == null) GD.Print("OSB - pnp is null");
+        if (ppn == null) GD.Print("OSB - ppn is null");
+        if (ppp == null) GD.Print("OSB - ppp is null");
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,12 +47,8 @@ public partial class OrangeSelectionBox : Node3D
     {
     }
 
-    public void SetSize(float X, float Y, float Z) 
+    public void SetSize(float SizeX, float SizeY, float SizeZ) 
     {
-        SizeX = X;
-        SizeY = Y;
-        SizeZ = Z;
-
         DistanceX = ((SizeX / 2));
         DistanceY = ((SizeY / 2));
         DistanceZ = ((SizeZ / 2));

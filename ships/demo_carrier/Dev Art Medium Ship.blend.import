@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://50q6wsep77i2"
-path="res://.godot/imported/Dev Art Medium Ship.blend-daccbba49fd96f7b2782f1b56ec5e2b9.scn"
+path="res://.godot/imported/Dev Art Medium Ship.blend-79467c620123166a175f421b652770fa.scn"
 
 [deps]
 
-source_file="res://ships/dev_art_medium_ship/Dev Art Medium Ship.blend"
-dest_files=["res://.godot/imported/Dev Art Medium Ship.blend-daccbba49fd96f7b2782f1b56ec5e2b9.scn"]
+source_file="res://ships/demo_carrier/Dev Art Medium Ship.blend"
+dest_files=["res://.godot/imported/Dev Art Medium Ship.blend-79467c620123166a175f421b652770fa.scn"]
 
 [params]
 

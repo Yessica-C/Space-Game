@@ -7,15 +7,17 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 
-public partial class ShipMotionTesting : RigidBody3D
+public partial class SelfPropelledSpaceObject : RigidBody3D
 {
     //user interaction parameters
     public bool Selected = false;
+    private float SelectionSizeX = 0;
+    private float SelectionSizeY = 0;
+    private float SelectionSizeZ = 0;
 
-	//auto thrust parameters
-	[Export] public float MoveSpeed = 15.0f; //5.0 for carrier
+    //auto thrust parameters
+    [Export] public float MoveSpeed = 15.0f; //5.0 for carrier
 	[Export] public float NavContactRange = 10.0f; // 10 for carrier
-	[Export] public float MinAlignment = 0.5f; // % alligned to target point to begin thrusting
 
 	//auto rotation parameters
 	[Export] public float SelfRotationSpeed = 4f; //How quickly the body rotates toward the target direction
@@ -34,6 +36,7 @@ public partial class ShipMotionTesting : RigidBody3D
     PackedScene RouteLineScene; 
     PackedScene OrangeSelectionBox = GD.Load<PackedScene>("res://space_objects//orange_selection_box/orange_selection_box.tscn");
 
+    public bool verbose = false;
 
     public enum NavMode
     { 
@@ -45,26 +48,25 @@ public partial class ShipMotionTesting : RigidBody3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        //do nothing, this is an abstract class
+    }
 
-		//config damping TODO read this from a ship-specific json on load - maybe a data child?
-        AngularDamp = 0.5f;
-        LinearDamp = 0.5f;
-
+    public void setupPathLineToggle()
+    {        
         //debug display route line button setup
         DisplayToggle = GetNodeOrNull<CheckButton>("/root/World/UserInterface/DebugMenu/VBoxContainer/DisplayPathLines");
-        RouteLineScene = GD.Load<PackedScene>("res://ship_components/path_line.tscn");
+        RouteLineScene = GD.Load<PackedScene>("res://ship_components/technical/path_line.tscn");
         if (DisplayToggle == null)
         {
-            GD.PrintErr("ERROR: Expected Resource: Root/DebugMenu/VBoxContainer/DisplayPathLines NOT FOUND - ShipMotionTesting.cs");
+            GD.PrintErr("ERROR: Expected Resource: Root/DebugMenu/VBoxContainer/DisplayPathLines NOT FOUND - SelfPropelledSpaceObject.cs");
             GD.PrintErr("Expected path: ");
         }
         DisplayToggle.Toggled += OnPathDisplayLineToggled;
         if (RouteLineScene == null)
         {
-            GD.PrintErr("ERROR: Expected Resource: res://ship_components/path_line.tscn NOT FOUND - ShipMotionTesting.cs");
+            GD.PrintErr("ERROR: Expected Resource: res://ship_components/technical/path_line.tscn NOT FOUND - SelfPropelledSpaceObject.cs");
         }
     }
-
     public override void _PhysicsProcess(double delta)
 	{
 		if (NAV_MODE != NavMode.STATIONARY)
@@ -77,11 +79,23 @@ public partial class ShipMotionTesting : RigidBody3D
                 UpdateTargetPos();
             }
         }
+        
+        if(verbose)
+        {
+            GD.Print("[", Name, "] Velocity: ", LinearVelocity.Length());
+        }
     }
 
     public override void _Process(double delta)
 	{
 
+    }
+
+    public void SetSelectionBoxSize(float x, float y, float z)
+    {
+        SelectionSizeX = x;
+        SelectionSizeY = y;
+        SelectionSizeZ = z;
     }
 
     //FOR INITIAL SETUP
@@ -114,7 +128,7 @@ public partial class ShipMotionTesting : RigidBody3D
         OrangeSelectionBox OSB = OrangeSelectionBox.Instantiate<OrangeSelectionBox>();
         AddChild(OSB);
         OSB.GlobalTransform = this.GlobalTransform;
-        OSB.SetSize(25, 20, 55);
+        OSB.SetSize(SelectionSizeX, SelectionSizeY, SelectionSizeZ);
         OSB.Name = "OSB";
         Selected = true;
     }
@@ -176,7 +190,10 @@ public partial class ShipMotionTesting : RigidBody3D
         //rotate between a few target positions to practice rotation
         if (Route.Count == 0)
         {
-            GD.Print("[", Name, "] - Route Complete");
+            if (verbose)
+            { 
+                GD.Print("[", Name, "] - Route Complete");
+            }
             NAV_MODE = NavMode.STATIONARY;
         }
         else 
@@ -198,7 +215,10 @@ public partial class ShipMotionTesting : RigidBody3D
 
                 TargetLocation = Route[TargetIndex];
             }
-            GD.Print("[", Name, "] - new Target: ", TargetLocation);
+            if (verbose)
+            { 
+                GD.Print("[", Name, "] - new Target: ", TargetLocation);
+            }
         }
     }
 }

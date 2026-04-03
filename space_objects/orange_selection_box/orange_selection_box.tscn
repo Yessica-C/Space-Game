@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dgylr6tvh4wsl"]
 
 [ext_resource type="PackedScene" uid="uid://dh1nkblt71l7d" path="res://space_objects/orange_selection_box/selection_box_corner.blend" id="1_7hipt"]
-[ext_resource type="Script" uid="uid://qjxyb8ium4te" path="res://space_objects/orange_selection_box/OrangeSelectionBox.cs" id="1_ly43m"]
+[ext_resource type="Script" path="res://space_objects/orange_selection_box/OrangeSelectionBox.cs" id="1_ly43m"]
 
 [node name="OrangeSelectionBox" type="Node3D" unique_id=193680029]
 script = ExtResource("1_ly43m")

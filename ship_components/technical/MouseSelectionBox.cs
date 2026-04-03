@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-public partial class SelectionBox : Area3D
+public partial class MouseSelectionBox : Area3D
 {
     Node Parent;
     bool Selected = false;

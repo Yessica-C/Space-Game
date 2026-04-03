@@ -23,12 +23,11 @@ public static class ShipMotionLib
             // Calculate distance to target
             float distanceToTarget = (TargetLocation - currentPosition).Length();
 
-            // Reduce acceleration based on distance to minimize overshoot
-            float distanceFactor = Mathf.Clamp(distanceToTarget / (2.5f * DistanceThreshold), 0.1f, 1.0f);
-            accelerationMagnitude *= distanceFactor;
-
-            Vector3 acceleration = directionToTarget * accelerationMagnitude;
-            Body.ApplyCentralForce(acceleration);
+            float decayFactor = Mathf.Exp(-2.0f / distanceToTarget);
+            accelerationMagnitude *= decayFactor;
+           
+            Vector3 acceleration = directionToTarget;
+            Body.ApplyCentralForce(acceleration * accelerationMagnitude);
             return 1;
         }
         return 0;
@@ -83,7 +82,6 @@ public static class ShipMotionLib
         // Calculate the rotation difference
         Quaternion RotationDifference = TargetQuat * CurrentQuat.Inverse();
 
-        // Apply torque (simplified approach)
         Vector3 AxisAngleTorque = RotationDifference.GetAxis() * RotationDifference.GetAngle() * TorqueMultiplier;
 
         // Apply the torque
@@ -161,5 +159,4 @@ public static class ShipMotionLib
         ClosestPoint = Closest;
         RouteIndex = BestIndex;
     }
-
 }
