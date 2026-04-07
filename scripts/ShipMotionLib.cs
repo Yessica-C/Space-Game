@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public static class ShipMotionLib
 {
+
+    #region Acceleration Functions
     //TODO add integer return codes if some arg does not exist
     public static int AlignmentAdjustedAccToTarget(RigidBody3D Body, Vector3 TargetLocation, float MoveSpeed, float DistanceThreshold)
     {
@@ -32,7 +34,9 @@ public static class ShipMotionLib
         }
         return 0;
     }
+    #endregion Acceleration Functions
 
+    #region Rotational Functions
     public static float AlignmentDiffDegrees(RigidBody3D Body, Vector3 TargetPos)
     {
         Vector3 DirectionTotarget = (TargetPos - Body.GlobalTransform.Origin).Normalized();
@@ -41,22 +45,6 @@ public static class ShipMotionLib
         float AngleDeg = Math.Abs(float.RadiansToDegrees(Angle) - 180); //in degrees
         return AngleDeg;
     }
-
-    public static Quaternion GetQuatToRotateTo(RigidBody3D Body, Vector3 TargetOrientation)
-    {
-        Vector3 Forward = TargetOrientation.Normalized(); //forward direction of self
-        Vector3 Up = new Vector3(0, -1, 0); //y is up
-        if (Math.Abs(Forward.Dot(Up)) > 0.99)//case for up and forward are parallel
-        {
-            Up = new Vector3(1, 0, 0);
-        }
-        Vector3 Right = Forward.Cross(Up).Normalized();
-        Up = Right.Cross(Forward).Normalized();
-
-        Basis b = new Basis(Right, Up, Forward);
-        return b.GetRotationQuaternion();
-    }
-
     //TODO add integer return codes if some arg does not exist
     public static int AlignTowardsTarget(RigidBody3D Body, Vector3 TargetPos, float TorqueMultiplier)
     {
@@ -88,11 +76,40 @@ public static class ShipMotionLib
         Body.ApplyTorque(AxisAngleTorque);
         return 0;
     }
+    public static Quaternion GetQuatToRotateTo(RigidBody3D Body, Vector3 TargetOrientation)
+    {
+        Vector3 Forward = TargetOrientation.Normalized(); //forward direction of self
+        Vector3 Up = new Vector3(0, -1, 0); //y is up
+        if (Math.Abs(Forward.Dot(Up)) > 0.99)//case for up and forward are parallel
+        {
+            Up = new Vector3(1, 0, 0);
+        }
+        Vector3 Right = Forward.Cross(Up).Normalized();
+        Up = Right.Cross(Forward).Normalized();
 
+        Basis b = new Basis(Right, Up, Forward);
+        return b.GetRotationQuaternion();
+    }
+
+    #endregion 
+
+    #region Navigational Path Functions
+    
+    //if an inclination is not specified, it must not matter.
     public static List<Vector3> GenerateOrbitalPoints(Vector3 center, float radius)
     {
-        // Ensure normal is normalized
-        Vector3 normal = new Vector3(0, 1, 0);
+        Random random = new Random();
+        float randomInclination = random.NextSingle() * 360f;
+        return GenerateOrbitalPoints(center, radius, randomInclination);
+    }
+
+    public static List<Vector3> GenerateOrbitalPoints(Vector3 center, float radius, float inclinationDegrees)
+    {
+        // Convert inclination to radians
+        float inclination = (float)(inclinationDegrees * Math.PI / 180.0f);
+        
+        // Create normal vector based on inclination (rotating around X-axis)
+        Vector3 normal = new Vector3(0, Mathf.Sin(inclination), Mathf.Cos(inclination));
         normal = normal.Normalized();
 
         // Create orthogonal vectors for the circle plane
@@ -108,20 +125,23 @@ public static class ShipMotionLib
 
             // Calculate point using parametric circle equation
             Vector3 point = center +
-                           radius * (tangent1 * Mathf.Cos(angle) + tangent2 * Mathf.Sin(angle));
+                        radius * (tangent1 * Mathf.Cos(angle) + tangent2 * Mathf.Sin(angle));
 
             points.Add(point);
         }
+        
+        // Add random orbit reversal (50% chance)
         Random random = new Random();
         double chance = random.NextDouble();
-
-        // 50% chance to reverse the orbit (CCW is normal, CW is reversed)
+        
         if (chance < 0.5)
         {
             points.Reverse();
         }
+        
         return points;
     }
+
 
     //used for orbit point generation
     private static void CreateOrthogonalBasis(Vector3 normal, out Vector3 tangent1, out Vector3 tangent2)
@@ -159,4 +179,6 @@ public static class ShipMotionLib
         ClosestPoint = Closest;
         RouteIndex = BestIndex;
     }
+
+    #endregion Navigational Path Functions
 }

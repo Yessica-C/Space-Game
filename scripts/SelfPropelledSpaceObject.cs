@@ -45,28 +45,15 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         ORBITING
     }
 
+    #region Engine Functions
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         //do nothing, this is an abstract class
     }
 
-    public void setupPathLineToggle()
-    {        
-        //debug display route line button setup
-        DisplayToggle = GetNodeOrNull<CheckButton>("/root/World/UserInterface/DebugMenu/VBoxContainer/DisplayPathLines");
-        RouteLineScene = GD.Load<PackedScene>("res://ship_components/technical/path_line.tscn");
-        if (DisplayToggle == null)
-        {
-            GD.PrintErr("ERROR: Expected Resource: Root/DebugMenu/VBoxContainer/DisplayPathLines NOT FOUND - SelfPropelledSpaceObject.cs");
-            GD.PrintErr("Expected path: ");
-        }
-        DisplayToggle.Toggled += OnPathDisplayLineToggled;
-        if (RouteLineScene == null)
-        {
-            GD.PrintErr("ERROR: Expected Resource: res://ship_components/technical/path_line.tscn NOT FOUND - SelfPropelledSpaceObject.cs");
-        }
-    }
+    
     public override void _PhysicsProcess(double delta)
 	{
 		if (NAV_MODE != NavMode.STATIONARY)
@@ -85,10 +72,26 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
             GD.Print("[", Name, "] Velocity: ", LinearVelocity.Length());
         }
     }
-
-    public override void _Process(double delta)
+    public override void _Process(double _delta)
 	{
 
+    }
+    #endregion Engine Functions
+    public void setupPathLineToggle()
+    {        
+        //debug display route line button setup
+        DisplayToggle = GetNodeOrNull<CheckButton>("/root/World/UserInterface/DebugMenu/VBoxContainer/DisplayPathLines");
+        RouteLineScene = GD.Load<PackedScene>("res://ship_components/technical/path_line.tscn");
+        if (DisplayToggle == null)
+        {
+            GD.PrintErr("ERROR: Expected Resource: Root/DebugMenu/VBoxContainer/DisplayPathLines NOT FOUND - SelfPropelledSpaceObject.cs");
+            GD.PrintErr("Expected path: ");
+        }
+        DisplayToggle.Toggled += OnPathDisplayLineToggled;
+        if (RouteLineScene == null)
+        {
+            GD.PrintErr("ERROR: Expected Resource: res://ship_components/technical/path_line.tscn NOT FOUND - SelfPropelledSpaceObject.cs");
+        }
     }
 
     public void SetSelectionBoxSize(float x, float y, float z)
@@ -98,30 +101,13 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         SelectionSizeZ = z;
     }
 
-    //FOR INITIAL SETUP
+    //FOR INITIAL SPAWNING ONLY
     public void OverrideCurrentPos(Vector3 NewPos)
     {
         GlobalPosition = NewPos;
     }
-    //For giving commands
-    public void SetNewRoute(List<Vector3> NewRoute, NavMode NewMode)
-    {
-        Route = NewRoute;
-        NAV_MODE = NewMode;
 
-        if (NewMode == NavMode.ORBITING)
-        {
-            Vector3 ClosestRoutePoint;
-            int ClosestRouteIndex;
-            ShipMotionLib.GetClosestPointInRoute(this, Route, out ClosestRoutePoint, out ClosestRouteIndex);
-            TargetLocation = ClosestRoutePoint;
-            TargetIndex = ClosestRouteIndex;
-        }
-        else
-        { 
-            UpdateTargetPos();
-        }
-    }
+    #region User Interaction    
     
     public void MouseHoverOn()
     {
@@ -147,6 +133,8 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     {
         GD.Print(Name, " Was Clicked!");
     }
+
+    #endregion User Interaction
     private void OnPathDisplayLineToggled(bool toggledOn)
     {
         if (toggledOn)
@@ -166,25 +154,33 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
             }
         }
     }
-
-    private void PrintTransform()
-    {
-        GD.Print("---------------------------------");
-        GD.Print("Global Position:\t", GlobalPosition);
-        GD.Print("Global Rotation:\t", GlobalRotation);
-        GD.Print("Local Quaternion:\t", Quaternion);
-    }
-
+    #region Navigation
 	private bool AlignedToCurrentTarget()
 	{
 		return ShipMotionLib.AlignmentDiffDegrees(this, TargetLocation) > AlignmentThreshold;
     }
+    public void SetNewRoute(List<Vector3> NewRoute, NavMode NewMode)
+    {
+        Route = NewRoute;
+        NAV_MODE = NewMode;
 
+        if (NewMode == NavMode.ORBITING)
+        {
+            Vector3 ClosestRoutePoint;
+            int ClosestRouteIndex;
+            ShipMotionLib.GetClosestPointInRoute(this, Route, out ClosestRoutePoint, out ClosestRouteIndex);
+            TargetLocation = ClosestRoutePoint;
+            TargetIndex = ClosestRouteIndex;
+        }
+        else
+        { 
+            UpdateTargetPos();
+        }
+    }
 	private bool WithinContactRangeOfTarget()
 	{
 		return GlobalPosition.DistanceTo(TargetLocation) < NavContactRange;
     }
-
     private void UpdateTargetPos()
     {
         //rotate between a few target positions to practice rotation
@@ -221,4 +217,5 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
             }
         }
     }
-}
+    #endregion Navigation
+}   
