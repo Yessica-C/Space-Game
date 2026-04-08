@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using SpaceGame.enums;
 
 
 public partial class SelfPropelledSpaceObject : RigidBody3D
@@ -39,12 +40,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
 
     public bool verbose = false;
 
-    public enum NavMode
-    { 
-        STATIONARY,
-        LINEAR,
-        ORBITING
-    }
+
 
     #region Engine Functions
 

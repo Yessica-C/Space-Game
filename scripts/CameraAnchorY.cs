@@ -72,6 +72,7 @@ public partial class CameraAnchorY : Node3D
     public override void _Process(double delta)
     {
         HandleUserCameraMotion(delta);
+
         if(Mode == CameraMode.TRACKING)
         {
             HandleTrackingMotion();
@@ -141,11 +142,10 @@ public partial class CameraAnchorY : Node3D
             Mode = CameraMode.FREE;
         }
     }
+
     public void _on_camera_track_button_pressed()
     {
-        
         Mode = CameraMode.TRACKING;
         TrackingTarget = SOM.GetSelectedObject();
     }
 }
-
