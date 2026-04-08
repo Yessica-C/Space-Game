@@ -128,10 +128,13 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
 
     public void MouseHoverOff()
     {
-        IEnumerable<OrangeSelectionBox> allSelectionBoxes = GetChildren().OfType<OrangeSelectionBox>();
-        foreach (var child in allSelectionBoxes)
+        if(!Selected)
         {
-            child.QueueFree();
+            IEnumerable<OrangeSelectionBox> allSelectionBoxes = GetChildren().OfType<OrangeSelectionBox>();
+            foreach (var child in allSelectionBoxes)
+            {
+                child.QueueFree();
+            }
         }
     }
 
@@ -139,7 +142,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     {
         GD.Print(Name, " Was Clicked!");
         Controller = GetParent<SpaceObjectManager>();
-        Controller.ChangeSelectedObject(this);
+        Controller.SetSelectedObject(this);
         Selected = true;
         MouseHoverOn();
     }

@@ -6,6 +6,7 @@
     <RootNamespace>SpaceGame</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="enums\" />
     <Folder Include="ships\dev_art_medium_ship\" />
   </ItemGroup>
 </Project>

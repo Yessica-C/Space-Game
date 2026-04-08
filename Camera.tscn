@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://djs1ohero5og4"]
 
-[ext_resource type="Script" uid="uid://calwe0m6cxag1" path="res://scripts/camera_anchor_y.gd" id="1_aavg0"]
+[ext_resource type="Script" uid="uid://brjuxul0lwr2a" path="res://scripts/CameraAnchorY.cs" id="1_aavg0"]
 [ext_resource type="Script" uid="uid://d1a667cny3c56" path="res://scripts/camera_anchor_x.gd" id="2_xjyju"]
 [ext_resource type="Script" uid="uid://dgxpbw6vj30lu" path="res://scripts/camera_3d.gd" id="3_lxp0o"]
 [ext_resource type="PackedScene" uid="uid://y7slfpp46b78" path="res://space_objects/blue_ender_star/resources/blue_ender_star.blend" id="4_aavg0"]

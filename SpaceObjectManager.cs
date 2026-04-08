@@ -69,7 +69,12 @@ public partial class SpaceObjectManager : Node
 	{
 	}
 
-    public void ChangeSelectedObject(SelfPropelledSpaceObject newSelection)
+    public SelfPropelledSpaceObject GetSelectedObject()
+    {
+        return selectedObject;
+    }
+
+    public void SetSelectedObject(SelfPropelledSpaceObject newSelection)
     {
         GD.Print("CSO");
         if (selectedObject != null)
