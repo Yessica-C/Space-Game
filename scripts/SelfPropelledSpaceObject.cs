@@ -14,6 +14,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     private float SelectionSizeX = 0;
     private float SelectionSizeY = 0;
     private float SelectionSizeZ = 0;
+    private SpaceObjectManager Controller = null;
 
     //auto thrust parameters
     [Export] public float MoveSpeed = 15.0f; //5.0 for carrier
@@ -50,7 +51,6 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        //do nothing, this is an abstract class
     }
 
     
@@ -76,7 +76,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
 	{
 
     }
-    #endregion Engine Functions
+    #endregion
     public void setupPathLineToggle()
     {        
         //debug display route line button setup
@@ -101,12 +101,20 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         SelectionSizeZ = z;
     }
 
+    #region Setters & Getters
+
     //FOR INITIAL SPAWNING ONLY
     public void OverrideCurrentPos(Vector3 NewPos)
     {
         GlobalPosition = NewPos;
     }
 
+    public void SetController(SpaceObjectManager controller)
+    {
+        this.Controller = controller;
+    }
+
+    #endregion Setters & Getters
     #region User Interaction    
     
     public void MouseHoverOn()
@@ -116,7 +124,6 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         OSB.GlobalTransform = this.GlobalTransform;
         OSB.SetSize(SelectionSizeX, SelectionSizeY, SelectionSizeZ);
         OSB.Name = "OSB";
-        Selected = true;
     }
 
     public void MouseHoverOff()
@@ -126,12 +133,20 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         {
             child.QueueFree();
         }
-        Selected = false;
     }
 
     public void InputSelected()
     {
         GD.Print(Name, " Was Clicked!");
+        Controller = GetParent<SpaceObjectManager>();
+        Controller.ChangeSelectedObject(this);
+        Selected = true;
+        MouseHoverOn();
+    }
+    public void Deselect()
+    {
+        Selected = false;
+        MouseHoverOff();
     }
 
     #endregion User Interaction

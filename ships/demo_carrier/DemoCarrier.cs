@@ -9,6 +9,7 @@ public partial class DemoCarrier : SelfPropelledSpaceObject
 		configureMotionParameters();
         setupPathLineToggle();
         SetSelectionBoxSize(25, 20, 55);
+        
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

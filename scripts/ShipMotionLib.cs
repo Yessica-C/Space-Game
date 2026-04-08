@@ -141,8 +141,6 @@ public static class ShipMotionLib
         
         return points;
     }
-
-
     //used for orbit point generation
     private static void CreateOrthogonalBasis(Vector3 normal, out Vector3 tangent1, out Vector3 tangent2)
     {

@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://bujoeu2x0his6"]
 
 [ext_resource type="PackedScene" uid="uid://djs1ohero5og4" path="res://Camera.tscn" id="1_fj7yv"]
+[ext_resource type="Script" uid="uid://dh8i5mrbkjkpr" path="res://user_interface/scripts/UserInterfaceController.cs" id="2_dwbse"]
 [ext_resource type="Script" uid="uid://bhav2cxpblk1s" path="res://SpaceObjectManager.cs" id="3_036b0"]
 [ext_resource type="Script" uid="uid://b4du1bs1jb1so" path="res://scripts/DebugMenu.cs" id="3_tlwt5"]
+[ext_resource type="Script" uid="uid://bq40ktv5s3nvd" path="res://user_interface/scripts/context_menu/CMObjectName.cs" id="4_dwbse"]
 [ext_resource type="PackedScene" uid="uid://dxiay4kogm45n" path="res://space_objects/blue_ender_star/blue_ender_star.tscn" id="5_dwbse"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rp7md"]
@@ -13,6 +15,17 @@ sky_material = SubResource("ProceduralSkyMaterial_rp7md")
 [sub_resource type="Environment" id="Environment_ob5r1"]
 background_mode = 2
 sky = SubResource("Sky_osvlo")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pkg7o"]
+bg_color = Color(0.28102726, 0.28102726, 0.28102726, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
 [node name="World" type="Node3D" unique_id=279368118]
 
@@ -26,6 +39,7 @@ transform = Transform3D(0.97441536, -0.18978621, 0.12039908, -0.09843424, 0.1212
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1.0000002, 0, -4.371139e-08, 0, 0, 0)
 
 [node name="UserInterface" type="Node" parent="." unique_id=750925297]
+script = ExtResource("2_dwbse")
 
 [node name="DebugMenu" type="Container" parent="UserInterface" unique_id=696133412]
 offset_right = 40.0
@@ -39,17 +53,91 @@ layout_mode = 2
 layout_mode = 2
 text = "Display Path Lines"
 
+[node name="ContextMenu" type="Control" parent="UserInterface" unique_id=956331977]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer2" type="PanelContainer" parent="UserInterface/ContextMenu" unique_id=406721055]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1450.0
+offset_top = 15.0
+offset_right = 1808.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pkg7o")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UserInterface/ContextMenu/PanelContainer2" unique_id=966358694]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="NameField2" type="MarginContainer" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer" unique_id=299368347]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/NameField2" unique_id=1889479860]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 32
+text = "Selection Context Menu"
+
+[node name="HSeparator" type="HSeparator" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer" unique_id=1300407280]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer" unique_id=276519670]
+layout_mode = 2
+
+[node name="NameLabel" type="MarginContainer" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=1932813414]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/HBoxContainer/NameLabel" unique_id=1498039294]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Name: "
+
+[node name="NameField" type="MarginContainer" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=655454776]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SelectedObjectName" type="Label" parent="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/HBoxContainer/NameField" unique_id=775949026]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 24
+text = "n/a"
+script = ExtResource("4_dwbse")
+
 [node name="SpaceObjectManager" type="Node" parent="." unique_id=1573519984]
 script = ExtResource("3_036b0")
 
-[node name="DemoAsteroid" parent="." unique_id=1264688801 instance=ExtResource("5_dwbse")]
+[node name="DemoAsteroid" parent="SpaceObjectManager" unique_id=1264688801 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -75, 0, 0)
 
-[node name="DemoAsteroid2" parent="." unique_id=1569497153 instance=ExtResource("5_dwbse")]
+[node name="DemoAsteroid2" parent="SpaceObjectManager" unique_id=1569497153 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -75)
 
-[node name="DemoAsteroid3" parent="." unique_id=641213270 instance=ExtResource("5_dwbse")]
+[node name="DemoAsteroid3" parent="SpaceObjectManager" unique_id=641213270 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 75)
 
-[node name="DemoAsteroid4" parent="." unique_id=377042551 instance=ExtResource("5_dwbse")]
+[node name="DemoAsteroid4" parent="SpaceObjectManager" unique_id=377042551 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, 0, 0)
+
+[connection signal="NewObjectSelected" from="SpaceObjectManager" to="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/HBoxContainer/NameField/SelectedObjectName" method="_on_space_object_manager_new_object_selected"]

@@ -27,6 +27,10 @@ window/size/viewport_height=1080
 
 project/assembly_name="Space Game"
 
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
 [input]
 
 move_forward={
