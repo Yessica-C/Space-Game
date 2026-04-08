@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using static SelfPropelledSpaceObject;
+using SpaceGame.enums;
 
 public partial class RouteViewerIMesh : MeshInstance3D
 {

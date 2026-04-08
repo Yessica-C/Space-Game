@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Runtime.CompilerServices;
+using SpaceGame.enums;
 
 public partial class SpaceObjectManager : Node
 {
@@ -29,7 +30,7 @@ public partial class SpaceObjectManager : Node
 		Carrier1.Name = "Carrier 1";
         Carrier1.SetController(this);
         Carrier1.OverrideCurrentPos(StartingPos);
-		Carrier1.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
+		Carrier1.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), NavMode.ORBITING);
 
         StartingPos = new Vector3(0, -50, 0);
         OrbitalCenter = new Vector3(-75, 0, 0);
@@ -39,7 +40,7 @@ public partial class SpaceObjectManager : Node
         Carrier2.Name = "Carrier 2";
         Carrier2.SetController(this);
         Carrier2.OverrideCurrentPos(StartingPos);
-        Carrier2.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
+        Carrier2.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), NavMode.ORBITING);
 
 
 
@@ -51,7 +52,7 @@ public partial class SpaceObjectManager : Node
         Fighter1.Name = "Fighter1";
         Fighter1.SetController(this);
         Fighter1.OverrideCurrentPos(StartingPos);
-        Fighter1.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
+        Fighter1.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), NavMode.ORBITING);
 
         StartingPos = new Vector3(0, 100, 0);
         OrbitalCenter = new Vector3(0, 0, 75);
@@ -61,7 +62,7 @@ public partial class SpaceObjectManager : Node
         Fighter2.SetController(this);
         Fighter2.Name = "Fighter2";
         Fighter2.OverrideCurrentPos(StartingPos);
-        Fighter2.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), SelfPropelledSpaceObject.NavMode.ORBITING);
+        Fighter2.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, 40f), NavMode.ORBITING);
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
