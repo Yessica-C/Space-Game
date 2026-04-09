@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://b4du1bs1jb1so" path="res://scripts/DebugMenu.cs" id="3_tlwt5"]
 [ext_resource type="Script" uid="uid://bq40ktv5s3nvd" path="res://user_interface/scripts/context_menu/CMObjectName.cs" id="4_dwbse"]
 [ext_resource type="PackedScene" uid="uid://dxiay4kogm45n" path="res://space_objects/blue_ender_star/blue_ender_star.tscn" id="5_dwbse"]
+[ext_resource type="Script" uid="uid://c56mxs7arfe2u" path="res://space_objects/blue_ender_star/BlueEnderStar.cs" id="7_pkg7o"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rp7md"]
 
@@ -138,15 +139,19 @@ script = ExtResource("3_036b0")
 
 [node name="DemoAsteroid" parent="SpaceObjectManager" unique_id=1264688801 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -75, 0, 0)
+script = ExtResource("7_pkg7o")
 
 [node name="DemoAsteroid2" parent="SpaceObjectManager" unique_id=1569497153 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -75)
+script = ExtResource("7_pkg7o")
 
 [node name="DemoAsteroid3" parent="SpaceObjectManager" unique_id=641213270 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 75)
+script = ExtResource("7_pkg7o")
 
 [node name="DemoAsteroid4" parent="SpaceObjectManager" unique_id=377042551 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, 0, 0)
+script = ExtResource("7_pkg7o")
 
 [connection signal="pressed" from="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/SelectOrbitButton" to="SpaceObjectManager" method="_SelectedObjectRequestedNewOrbitTarget"]
 [connection signal="pressed" from="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/CameraTrackButton" to="Camera" method="_on_camera_track_button_pressed"]
