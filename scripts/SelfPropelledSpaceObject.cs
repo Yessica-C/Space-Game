@@ -12,14 +12,14 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
 {
     //user interaction parameters
     public bool Selected = false;
-    private float SelectionSizeX = 0;
-    private float SelectionSizeY = 0;
-    private float SelectionSizeZ = 0;
+    private float SelectionSizeX = 5;
+    private float SelectionSizeY = 5;
+    private float SelectionSizeZ = 5;
     private SpaceObjectManager Controller = null;
 
     //auto thrust parameters
-    [Export] public float MoveSpeed = 15.0f; //5.0 for carrier
-	[Export] public float NavContactRange = 10.0f; // 10 for carrier
+    [Export] public float MoveSpeed = 0; //5.0 for carrier
+	[Export] public float NavContactRange = 0f; // 10 for carrier
 
 	//auto rotation parameters
 	[Export] public float SelfRotationSpeed = 4f; //How quickly the body rotates toward the target direction
@@ -47,6 +47,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        SetSelectionBoxSize(10, 10, 10);
     }
 
     
@@ -138,7 +139,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     {
         GD.Print(Name, " Was Clicked!");
         Controller = GetParent<SpaceObjectManager>();
-        Controller.SetSelectedObject(this);
+        Controller.ObjectSelectionTrigger(this);
         Selected = true;
         MouseHoverOn();
     }
@@ -178,7 +179,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         Route = NewRoute;
         NAV_MODE = NewMode;
 
-        if (NewMode == NavMode.ORBITING)
+        if (NewMode == NavMode.ORBITING_STATIONARY)
         {
             Vector3 ClosestRoutePoint;
             int ClosestRouteIndex;
@@ -213,7 +214,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
                 TargetLocation = Route[0];
                 Route.RemoveAt(0);
             }
-            if (NAV_MODE == NavMode.ORBITING)
+            if (NAV_MODE == NavMode.ORBITING_STATIONARY)
             {
                 TargetIndex++;
 

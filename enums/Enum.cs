@@ -15,6 +15,11 @@ public enum NavMode
 { 
     STATIONARY,
     LINEAR,
-    ORBITING,
-    TIDAL_ORBIT
+    ORBITING_STATIONARY,
+    TIDAL_ORBIT_STATIONARY
+}
+public enum SelectionBehavior
+{
+    SELECT,
+    ORBITAL_TARGET
 }

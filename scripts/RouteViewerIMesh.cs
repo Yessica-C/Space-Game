@@ -45,7 +45,7 @@ public partial class RouteViewerIMesh : MeshInstance3D
                     LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
                 }
             }
-            if (Parent.NAV_MODE == NavMode.ORBITING)
+            if (Parent.NAV_MODE == NavMode.ORBITING_STATIONARY)
             {
                 for (int i = 0; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
                 {

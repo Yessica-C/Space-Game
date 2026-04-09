@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://djs1ohero5og4" path="res://Camera.tscn" id="1_fj7yv"]
 [ext_resource type="Script" uid="uid://dh8i5mrbkjkpr" path="res://user_interface/scripts/UserInterfaceController.cs" id="2_dwbse"]
-[ext_resource type="Script" uid="uid://brjuxul0lwr2a" path="res://scripts/CameraAnchorY.cs" id="2_pkg7o"]
 [ext_resource type="Script" uid="uid://bhav2cxpblk1s" path="res://SpaceObjectManager.cs" id="3_036b0"]
 [ext_resource type="Script" uid="uid://b4du1bs1jb1so" path="res://scripts/DebugMenu.cs" id="3_tlwt5"]
 [ext_resource type="Script" uid="uid://bq40ktv5s3nvd" path="res://user_interface/scripts/context_menu/CMObjectName.cs" id="4_dwbse"]
@@ -38,12 +37,6 @@ transform = Transform3D(0.97441536, -0.18978621, 0.12039908, -0.09843424, 0.1212
 
 [node name="Camera" parent="." unique_id=1872248708 instance=ExtResource("1_fj7yv")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1.0000002, 0, -4.371139e-08, 0, 0, 0)
-script = ExtResource("2_pkg7o")
-MousePanningSensitivity = 0.1
-KeyboardPanningSensitivity = 100.0
-MouseRotationSpeed = 0.01
-KeyboardRotationSpeed = 5.0
-MaxVerticalAngle = 1.5
 
 [node name="UserInterface" type="Node" parent="." unique_id=750925297]
 script = ExtResource("2_dwbse")
@@ -155,5 +148,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 75)
 [node name="DemoAsteroid4" parent="SpaceObjectManager" unique_id=377042551 instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, 0, 0)
 
+[connection signal="pressed" from="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/SelectOrbitButton" to="SpaceObjectManager" method="_SelectedObjectRequestedNewOrbitTarget"]
 [connection signal="pressed" from="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/CameraTrackButton" to="Camera" method="_on_camera_track_button_pressed"]
 [connection signal="NewObjectSelected" from="SpaceObjectManager" to="UserInterface/ContextMenu/PanelContainer2/VBoxContainer/HBoxContainer/NameField/SelectedObjectName" method="_on_space_object_manager_new_object_selected"]

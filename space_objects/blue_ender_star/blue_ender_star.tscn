@@ -1,14 +1,29 @@
 [gd_scene format=3 uid="uid://dxiay4kogm45n"]
 
+[ext_resource type="Script" uid="uid://d1mecu051x2sy" path="res://scripts/SelfPropelledSpaceObject.cs" id="1_00g32"]
 [ext_resource type="PackedScene" uid="uid://y7slfpp46b78" path="res://space_objects/blue_ender_star/resources/blue_ender_star.blend" id="1_ts7pt"]
+[ext_resource type="Script" uid="uid://drk0qw2b1ppbo" path="res://ship_components/technical/MouseSelectionBox.cs" id="3_3sqfh"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_5a571"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_f07kk"]
+size = Vector3(8, 8, 8)
+
 [node name="DemoAsteroid" type="RigidBody3D" unique_id=1264688801]
 disable_mode = 1
+script = ExtResource("1_00g32")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1815002386]
 transform = Transform3D(4.925, 0, 0, 0, 4.925, 0, 0, 0, 4.925, 0, 0, 0)
 shape = SubResource("SphereShape3D_5a571")
 
 [node name="blue_ender_star" parent="." unique_id=1833822154 instance=ExtResource("1_ts7pt")]
+
+[node name="SelectionBox" type="Area3D" parent="." unique_id=118803281]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("3_3sqfh")
+
+[node name="SelectionShape" type="CollisionShape3D" parent="SelectionBox" unique_id=1151896835]
+shape = SubResource("BoxShape3D_f07kk")
+debug_color = Color(0.7317242, 0.46844274, 0.1736567, 0.41960785)
