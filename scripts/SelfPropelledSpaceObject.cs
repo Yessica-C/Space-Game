@@ -6,6 +6,8 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using SpaceGame.enums;
+using System.Reflection.Metadata;
+using System.Security.Cryptography;
 
 
 public partial class SelfPropelledSpaceObject : RigidBody3D
@@ -22,15 +24,19 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
 	[Export] public float NavContactRange = 0f; // 10 for carrier
 
 	//auto rotation parameters
-	[Export] public float SelfRotationSpeed = 4f; //How quickly the body rotates toward the target direction
-	[Export] public float TorqueMultiplier = 4f; //1.0 for carrier
-	[Export] public float AlignmentThreshold = 75.0f; //Angle threshold in degrees to be "aligned"
+	[Export] public float SelfRotationSpeed = 0f; //How quickly the body rotates toward the target direction
+	[Export] public float TorqueMultiplier = 0f; //1.0 for carrier
+	[Export] public float AlignmentThreshold = 0f; //Angle threshold in degrees to be "aligned"
 
 	//navigation parameters
     public NavMode NAV_MODE = NavMode.STATIONARY;
     public List<Vector3> Route = new List<Vector3>();
     public Vector3 TargetLocation;
-	public int TargetIndex = -1;
+	private int TargetIndex = -1;
+    private double TimeSinceNavUpdate = 0;
+    SelfPropelledSpaceObject NavTarget = null;
+    float OrbitalInclination = 0;
+    Vector3 OrbitalCenter;
 
     //debug path view parameters
     private CheckButton DisplayToggle;
@@ -38,6 +44,8 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     PackedScene RouteLineScene; 
     PackedScene OrangeSelectionBox = GD.Load<PackedScene>("res://space_objects//orange_selection_box/orange_selection_box.tscn");
 
+    //object component parameters
+    private ObjectType OBJType;
     public bool verbose = false;
 
 
@@ -53,21 +61,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
     
     public override void _PhysicsProcess(double delta)
 	{
-		if (NAV_MODE != NavMode.STATIONARY)
-        {
-			ShipMotionLib.AlignTowardsTarget(this, TargetLocation, TorqueMultiplier);
-            ShipMotionLib.AlignmentAdjustedAccToTarget(this, TargetLocation, MoveSpeed, NavContactRange);
-            
-            if (WithinContactRangeOfTarget())//if within contact range, of target, move to next target
-            {
-                UpdateTargetPos();
-            }
-        }
-        
-        if(verbose)
-        {
-            GD.Print("[", Name, "] Velocity: ", LinearVelocity.Length());
-        }
+        HandleNavigation(delta);
     }
     public override void _Process(double _delta)
 	{
@@ -91,15 +85,15 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         }
     }
 
+
+    #region Setters & Getters
+
     public void SetSelectionBoxSize(float x, float y, float z)
     {
         SelectionSizeX = x;
         SelectionSizeY = y;
         SelectionSizeZ = z;
     }
-
-    #region Setters & Getters
-
     //FOR INITIAL SPAWNING ONLY
     public void OverrideCurrentPos(Vector3 NewPos)
     {
@@ -111,6 +105,31 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         this.Controller = controller;
     }
 
+    public ObjectType GetObjectType()
+    {
+        return this.OBJType;
+    }
+    public void SetObjectType(ObjectType Type)
+    {
+        this.OBJType = Type;
+    }
+    public void SetNavTarget(SelfPropelledSpaceObject Target)
+    {
+        NavTarget = Target;
+        OrbitalCenter = Target.GlobalPosition;
+    }
+    public void SetOrbitalInclination(float Inclination)
+    {
+        OrbitalInclination = Inclination;
+    }
+    public float GetOrbitalInclination()
+    {
+        return OrbitalInclination;
+    }
+    public int GetTargetIndex()
+    {
+        return TargetIndex;
+    }
     #endregion Setters & Getters
     #region User Interaction    
     
@@ -170,7 +189,58 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
         }
     }
     #region Navigation
-	private bool AlignedToCurrentTarget()
+	private void HandleNavigation(double delta)
+    {
+        switch(NAV_MODE)
+        {
+            case NavMode.STATIONARY:
+                //do nothing
+                break;
+            case NavMode.LINEAR:
+                HandleLinearMotion(delta);
+                break;
+            case NavMode.ORBITING_STATIONARY:
+                HandleStationaryOrbitMotion(delta);
+                break;
+            case NavMode.ORBITING_MOVING:
+                HandleMovingOrbitMotion(delta);
+                break;
+        }
+    }
+
+    private void HandleLinearMotion(double delta)
+    {
+        ShipMotionLib.AlignTowardsTarget(this, TargetLocation, TorqueMultiplier);
+        ShipMotionLib.AlignmentAdjustedAccToTarget(this, TargetLocation, MoveSpeed, NavContactRange);
+        
+        if (WithinContactRangeOfTarget())//if within contact range, of target, move to next target
+        {
+            UpdateTargetPos();
+        }
+    }
+    private void HandleStationaryOrbitMotion(double delta)
+    {
+        HandleLinearMotion(delta);
+    }
+    private void HandleMovingOrbitMotion(double delta)
+    {
+        TimeSinceNavUpdate += delta;
+        if (TimeSinceNavUpdate > 0.5)
+        {
+            TimeSinceNavUpdate = 0;
+            Vector3 TargetPosDiff = NavTarget.GlobalPosition - OrbitalCenter;
+            OrbitalCenter = NavTarget.GlobalPosition;
+            //for each point in route, update with change in target position
+            for (int i = 0; i < Route.Count; i++)
+            {
+                Route[i] += TargetPosDiff;
+            }
+            TargetLocation = Route[TargetIndex];
+            //SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(NavTarget.GlobalPosition, 40f, false, GetOrbitalInclination()), NAV_MODE);
+        }
+        HandleLinearMotion(delta);
+    }
+    private bool AlignedToCurrentTarget()
 	{
 		return ShipMotionLib.AlignmentDiffDegrees(this, TargetLocation) > AlignmentThreshold;
     }
@@ -187,7 +257,15 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
             TargetLocation = ClosestRoutePoint;
             TargetIndex = ClosestRouteIndex;
         }
-        else
+        if(NewMode == NavMode.ORBITING_MOVING)
+        {
+            Vector3 ClosestRoutePoint;
+            int ClosestRouteIndex;
+            ShipMotionLib.GetClosestPointInRoute(this, Route, out ClosestRoutePoint, out ClosestRouteIndex);
+            TargetIndex = ClosestRouteIndex;
+            UpdateTargetPos();
+        }
+        else 
         { 
             UpdateTargetPos();
         }
@@ -214,7 +292,7 @@ public partial class SelfPropelledSpaceObject : RigidBody3D
                 TargetLocation = Route[0];
                 Route.RemoveAt(0);
             }
-            if (NAV_MODE == NavMode.ORBITING_STATIONARY)
+            if (NAV_MODE == NavMode.ORBITING_STATIONARY || NAV_MODE == NavMode.ORBITING_MOVING)
             {
                 TargetIndex++;
 

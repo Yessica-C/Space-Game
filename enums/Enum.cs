@@ -16,6 +16,7 @@ public enum NavMode
     STATIONARY,
     LINEAR,
     ORBITING_STATIONARY,
+    ORBITING_MOVING,
     TIDAL_ORBIT_STATIONARY
 }
 public enum SelectionBehavior

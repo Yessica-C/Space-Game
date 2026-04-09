@@ -39,13 +39,13 @@ public partial class RouteViewerIMesh : MeshInstance3D
             //linear remaining path
             if (Parent.NAV_MODE == NavMode.LINEAR)
             {
-                for (int i = Parent.TargetIndex; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
+                for (int i = Parent.GetTargetIndex(); i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
                 {
                     LineMesh.SurfaceAddVertex(Route[i] - GlobalPosition);
                     LineMesh.SurfaceAddVertex(Route[i + 1] - GlobalPosition);
                 }
             }
-            if (Parent.NAV_MODE == NavMode.ORBITING_STATIONARY)
+            if (Parent.NAV_MODE == NavMode.ORBITING_STATIONARY || Parent.NAV_MODE == NavMode.ORBITING_MOVING)
             {
                 for (int i = 0; i < Route.Count - 1; i++) // Changed from Route.Length to Route.Count
                 {

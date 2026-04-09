@@ -1,4 +1,5 @@
 using Godot;
+using SpaceGame.enums;
 using System;
 
 public partial class DevArtFighter : SelfPropelledSpaceObject
@@ -9,6 +10,7 @@ public partial class DevArtFighter : SelfPropelledSpaceObject
         configureMotionParameters();
         setupPathLineToggle();
         SetSelectionBoxSize(8, 8, 8);
+		SetObjectType(ObjectType.SHIP);
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

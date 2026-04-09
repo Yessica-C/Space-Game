@@ -105,8 +105,23 @@ public partial class SpaceObjectManager : Node
         //TODO automatically select between ORBITING_STATIONARY and ORBITING_MOVING based on target object type
         GD.Print("Commanding ", Body.Name, " To Orbit ", Target.Name);
         Vector3 OrbitalCenter = Target.GlobalPosition;
-        float OrbitalRadius = 40f;
-        Body.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, OrbitalRadius), NavMode.ORBITING_STATIONARY);
+        float OrbitalRadius = 70f;
+        NavMode TargetMode = NavMode.ORBITING_STATIONARY;
+        if (Target.GetObjectType() == ObjectType.SHIP)
+        {
+            TargetMode = NavMode.ORBITING_MOVING;
+            GD.Print("Ship Case");
+        }
+        if (Target.GetObjectType() == ObjectType.ASTEROID)
+        {    
+            TargetMode = NavMode.ORBITING_STATIONARY;
+            GD.Print("Asteroid Case");
+        }
+        Random random = new Random();
+        float randomInclination = random.NextSingle() * 360f;
+        Body.SetNavTarget(Target);
+        Body.SetOrbitalInclination(randomInclination);
+        Body.SetNewRoute(ShipMotionLib.GenerateOrbitalPoints(OrbitalCenter, OrbitalRadius, randomInclination), TargetMode);
         Target.Deselect();
         NextBehavior = SelectionBehavior.SELECT;
     }
@@ -120,8 +135,11 @@ public partial class SpaceObjectManager : Node
     #region Signal Handlers
     public void _SelectedObjectRequestedNewOrbitTarget()
     {
-        GD.Print("Select Object To Orbit");
-        NextBehavior = SelectionBehavior.ORBITAL_TARGET;
+        if (selectedObject != null)
+        {
+            GD.Print("Select Object To Orbit");
+            NextBehavior = SelectionBehavior.ORBITAL_TARGET;
+        }
     }
     #endregion Signal Handlers
 }

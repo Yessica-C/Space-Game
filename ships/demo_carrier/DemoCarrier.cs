@@ -1,4 +1,5 @@
 using Godot;
+using SpaceGame.enums;
 using System;
 
 public partial class DemoCarrier : SelfPropelledSpaceObject
@@ -9,7 +10,7 @@ public partial class DemoCarrier : SelfPropelledSpaceObject
 		configureMotionParameters();
         setupPathLineToggle();
         SetSelectionBoxSize(25, 20, 55);
-        
+		SetObjectType(ObjectType.SHIP);
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
